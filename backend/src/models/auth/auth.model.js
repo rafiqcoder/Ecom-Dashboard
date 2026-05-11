@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-
 const authSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -26,6 +25,15 @@ const authSchema = new mongoose.Schema({
   varified: {
     type: Boolean,
     default: false,
+  },
+  location: {
+    type: String,
+    default: "",
+  },
+  profile: {
+    type: String,
+    default:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLgpUfLdB4jsJMgKbUYLOdNjr55992CPSsIwg1cFgx8BzDnJ5Ec-FNKEM&s",
   },
 });
 const authModel = mongoose.model("auth", authSchema);
