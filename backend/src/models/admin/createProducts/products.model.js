@@ -40,11 +40,11 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: [true, "Poster is required"],
   },
-  productImages: [
-    {
-      type: String,
-    },
-  ],
+  // productImages: [
+  //   {
+  //     type: String,
+  //   },
+  // ],
   productCategory: [
     {
       type: String,

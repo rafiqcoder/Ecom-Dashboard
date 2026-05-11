@@ -1,5 +1,7 @@
+import productModel from "../../../models/admin/createProducts/products.model.js";
 import uploadFile from "../../../services/storage.service.js";
 
+// create new products
 export const createNewProductController = async (req, res) => {
   const user = req.user;
   if (user.role !== "admin") {
@@ -28,23 +30,28 @@ export const createNewProductController = async (req, res) => {
   const imagesFile = req.file;
   const poster = await uploadFile({
     buffer: imagesFile.buffer,
-    fileName: `${Date.now()}-${posterFile.originalname}`,
+    fileName: `${Date.now()}-${imagesFile.originalname}`,
     folder: "product-images",
   });
 
   //   const uploadImages = [];
   const posterURL = poster.url;
 
-  console.log(posterFile, name, description);
-  // console.log(
-  //   name,
-  //   description,
-  //   poster,
-  //   price,
-  //   discountEnd,
-  //   discountStart,
-  //   discountPrice,
-  //   productCategory,
-  //   productTag,
-  // );
+  const newProduct = await productModel.create({
+    name,
+    description,
+    price,
+    discountPrice,
+    discountStart,
+    discountEnd,
+    stockQuantity,
+    stockStatus,
+    productTag,
+    poster: posterURL,
+  });
+  return res.status(201).json({
+    message: "Product successfully created",
+    success: true,
+    newProduct,
+  });
 };
