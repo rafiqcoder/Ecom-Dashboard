@@ -19,7 +19,7 @@ export const registerController = async (req, res) => {
     role,
     phone,
     name,
-    location
+    location,
   });
   // create token
   const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
@@ -57,9 +57,15 @@ export const loginController = async (req, res) => {
     expiresIn: "7d",
   });
   res.cookie("token", token);
+
+  // update last login
+  const presentTime = new Date();
+  user.lastLogin = presentTime;
+  await user.save();
   // remove password
   const updateData = user.toObject();
   delete updateData.password;
+
   return res.status(200).json({
     message: "Login success",
     success: true,

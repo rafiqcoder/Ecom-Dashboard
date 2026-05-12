@@ -35,6 +35,23 @@ const authSchema = new mongoose.Schema({
     default:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLgpUfLdB4jsJMgKbUYLOdNjr55992CPSsIwg1cFgx8BzDnJ5Ec-FNKEM&s",
   },
+  lastLogin: {
+    type: Date,
+    default: null,
+  },
+  lastSeen: {
+    type: Date,
+    default: null,
+  },
+  onlineStatus: {
+    type: String,
+    enum: ["online", "offline"],
+    default: "online",
+  },
+  socketId: {
+    type: String,
+    default: null,
+  },
 });
 const authModel = mongoose.model("auth", authSchema);
 export default authModel;
