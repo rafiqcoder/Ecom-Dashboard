@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import redis from "../../config/cache.js";
 // register user
 export const registerController = async (req, res) => {
-  const { name, email, password, phone, role } = req.body;
+  const { name, email, password, phone, role, location } = req.body;
   const isUserExist = await authModel.findOne({ email });
   if (isUserExist) {
     return res.status(404).json({
@@ -19,6 +19,7 @@ export const registerController = async (req, res) => {
     role,
     phone,
     name,
+    location,
   });
   // create token
   const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
@@ -56,9 +57,15 @@ export const loginController = async (req, res) => {
     expiresIn: "7d",
   });
   res.cookie("token", token);
+
+  // update last login
+  const presentTime = new Date();
+  user.lastLogin = presentTime;
+  await user.save();
   // remove password
   const updateData = user.toObject();
   delete updateData.password;
+
   return res.status(200).json({
     message: "Login success",
     success: true,
