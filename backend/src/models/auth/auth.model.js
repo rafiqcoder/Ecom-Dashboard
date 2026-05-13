@@ -46,7 +46,7 @@ const authSchema = new mongoose.Schema({
   onlineStatus: {
     type: String,
     enum: ["online", "offline"],
-    default: "online",
+    default: "offline",
   },
   socketId: {
     type: String,

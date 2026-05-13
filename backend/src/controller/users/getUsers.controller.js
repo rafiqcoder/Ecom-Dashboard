@@ -17,7 +17,6 @@ export const getUsersController = async (req, res) => {
     });
   }
   const users = await authModel.find();
-
   return res.status(200).json({
     message: "Users fetch successfuly",
     success: true,
