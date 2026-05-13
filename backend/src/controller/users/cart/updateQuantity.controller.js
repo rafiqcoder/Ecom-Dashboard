@@ -19,8 +19,20 @@ export const updateQuantityController = async (req, res) => {
     productId,
     userId: user._id,
   });
-  if (product.quantity < productStock.stockQuantity) {
+  if (!product) {
+    return res.status(404).json({
+      message: "Product not found",
+      success: false,
+    });
+  }
+  if (
+    state.state === "increase" &&
+    product.quantity < productStock.stockQuantity
+  ) {
     product.quantity += 1;
+    product.save();
+  } else if (state.state === "decrease" && product.quantity > 1) {
+    product.quantity -= 1;
     product.save();
   }
   const jsonMsg = {
@@ -32,5 +44,4 @@ export const updateQuantityController = async (req, res) => {
     jsonMsg.message = "You reached maximum stock quantity of this product";
   }
   return res.status(200).json(jsonMsg);
-  console.log(product.quantity, productStock.stockQuantity);
 };
