@@ -8,6 +8,9 @@ import getAllUserRouter from "./routes/admin/users/getUser.route.js";
 import cartProductRouter from "./routes/user/cart/cartProduct.route.js";
 import removeProductFromCartRouter from "./routes/user/cart/removeProduct.route.js";
 import updateQuantityRouter from "./routes/user/cart/updateQuantity.route.js";
+import orderRouter from "./routes/user/orders/order.route.js";
+import updateOrderStatusRouter from "./routes/admin/users/updateOrderStatus.route.js";
+import getAllOrderRouter from "./routes/admin/users/getAllOrder.route.js";
 const app = express();
 
 app.use(express.json());
@@ -31,4 +34,10 @@ app.use("/", cartProductRouter);
 app.use("/", removeProductFromCartRouter);
 // update product quantity
 app.use("/", updateQuantityRouter);
+// order router
+app.use("/", orderRouter);
+// update order status controller by admin
+app.use("/", updateOrderStatusRouter);
+// get all order router
+app.use("/", getAllOrderRouter);
 export default app;

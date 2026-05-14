@@ -1,3 +1,4 @@
+// remove product from cart
 import express from "express";
 import { removeProductController } from "../../../controller/users/cart/removeProduct.controller.js";
 import { identifyUser } from "../../../middlewares/auth.middlewares.js";

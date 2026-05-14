@@ -25,6 +25,7 @@ export const updateQuantityController = async (req, res) => {
       success: false,
     });
   }
+  // check product quantity increase or decrease
   if (
     state.state === "increase" &&
     product.quantity < productStock.stockQuantity
@@ -35,8 +36,9 @@ export const updateQuantityController = async (req, res) => {
     product.quantity -= 1;
     product.save();
   }
+  // response json
   const jsonMsg = {
-    message: "Successfully added to you cart",
+    message: "Successfully update product quantity",
     success: true,
     product,
   };
