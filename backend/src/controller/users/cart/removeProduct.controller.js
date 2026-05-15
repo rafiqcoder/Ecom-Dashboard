@@ -1,3 +1,4 @@
+// remove product from cart
 import cartModel from "../../../models/user/cart/cartProduct.model.js";
 
 export const removeProductController = async (req, res, next) => {

@@ -1,9 +1,11 @@
+// update product quantity of cart
 import productModel from "../../../models/admin/createProducts/products.model.js";
 import cartModel from "../../../models/user/cart/cartProduct.model.js";
 
 export const updateQuantityController = async (req, res) => {
   const user = req.user;
   const productId = req.params?.productId;
+  //  increase or decrease in state variable
   const state = req.body;
   if (!productId) {
     return res.status(406).json({

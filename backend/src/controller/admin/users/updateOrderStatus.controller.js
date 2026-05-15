@@ -1,3 +1,5 @@
+// update order status separately
+import productModel from "../../../models/admin/createProducts/products.model.js";
 import orderModel from "../../../models/user/orders/order.model.js";
 
 export const updateOrderStatusController = async (req, res) => {
@@ -25,7 +27,25 @@ export const updateOrderStatusController = async (req, res) => {
       success: false,
     });
   }
-
+  // if product is delivered then update admin product quantity
+  if (order.orderStatus === "delivered") {
+    order.products.map(async (item) => {
+      await productModel.findByIdAndUpdate(item.productId, {
+        $inc: {
+          stockQuantity: -item.quantity,
+        },
+      });
+    });
+  }
+  // if (order.orderStatus === "cancelled") {
+  //   order.products.map(async (item) => {
+  //     await productModel.findByIdAndUpdate(item.productId, {
+  //       $inc: {
+  //         stockQuantity: +item.quantity,
+  //       },
+  //    });
+  //   }); 
+  // }
   return res.status(200).json({
     message: "Successfully update order status",
     success: true,

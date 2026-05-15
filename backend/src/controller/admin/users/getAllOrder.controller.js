@@ -1,3 +1,4 @@
+// get all orders by admin
 import orderModel from "../../../models/user/orders/order.model.js";
 
 export const getAllOrderController = async (req, res) => {
@@ -8,6 +9,7 @@ export const getAllOrderController = async (req, res) => {
       success: false,
     });
   }
+  // find all order from model
   const orders = await orderModel.find();
   res.status(200).json({
     message: "Orders fetch successfuly",

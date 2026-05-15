@@ -1,3 +1,4 @@
+// add to cart product
 import productModel from "../../../models/admin/createProducts/products.model.js";
 import cartModel from "../../../models/user/cart/cartProduct.model.js";
 
@@ -10,6 +11,7 @@ export const addToCartController = async (req, res, next) => {
         success: false,
       });
     }
+    // get product id
     const productId = req.params?.productId;
     // check if product not exist
     const isProductExist = await productModel.findById(productId);

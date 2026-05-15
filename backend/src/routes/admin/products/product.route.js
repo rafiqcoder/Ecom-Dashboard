@@ -5,6 +5,7 @@ import upload from "../../../middlewares/multer/multer.middleware.js";
 import { productValidate } from "../../../validations/product.validation.js";
 import { getProductController } from "../../../controller/admin/productsController/getProducts.controller.js";
 import { updateProductController } from "../../../controller/admin/productsController/updateProduct.controller.js";
+import { removeProductControllerByAdmin } from "../../../controller/admin/productsController/removeProductByAdmin.controller.js";
 const productsRouter = express.Router();
 
 // create new product router
@@ -23,6 +24,9 @@ productsRouter.patch(
   upload.single("poster"),
   updateProductController,
 );
+
+// delete product
+productsRouter.delete("/admin/products/delete/:productId", identifyUser, removeProductControllerByAdmin)
 
 // get all products
 productsRouter.get("/products", identifyUser, getProductController);

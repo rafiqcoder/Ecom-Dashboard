@@ -7,6 +7,7 @@ const orderSchema = new mongoose.Schema(
     },
     paymentType: {
       type: String,
+      required: [true, "payment type is required"],
       enum: ["Cash on delivery", "Bkash"],
     },
     orderStatus: {
@@ -23,10 +24,10 @@ const orderSchema = new mongoose.Schema(
     },
     products: [
       {
-        userId: {
-          type: mongoose.Schema.Types.ObjectId,
-          required: [true, "User id is required"],
-        },
+        // userId: {
+        //   type: mongoose.Schema.Types.ObjectId,
+        //   required: [true, "User id is required"],
+        // },
         productId: {
           type: mongoose.Schema.Types.ObjectId,
           required: [true, "Product id is required"],
@@ -35,6 +36,22 @@ const orderSchema = new mongoose.Schema(
           type: Number,
           default: 1,
           required: [true, "Product quantity is required"],
+        },
+        title: {
+          type: String,
+          required: [true, "title is required"],
+        },
+        image: {
+          type: String,
+          required: [true, "Image is required"],
+        },
+        price: {
+          type: Number,
+          required: [true, "Price is required"],
+        },
+        subTotal: {
+          type: Number,
+          required: [true, "Sub total is required"],
         },
       },
     ],
@@ -46,6 +63,15 @@ const orderSchema = new mongoose.Schema(
     mobile: {
       type: String,
       required: [true, "Mobile number is required"],
+    },
+    totalPrice: {
+      type: Number,
+      required: [true, "Total price is required"],
+    },
+    paymentStatus: {
+      type: String,
+      required: [true, "Payment status is requried"],
+      enum: ["pending", "paid", "failed", "refunded"],
     },
   },
   { timestamps: true },

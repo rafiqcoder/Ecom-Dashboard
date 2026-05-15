@@ -1,3 +1,4 @@
+// get all users
 import authModel from "../../models/auth/auth.model.js";
 
 export const getUsersController = async (req, res) => {
@@ -9,6 +10,7 @@ export const getUsersController = async (req, res) => {
       err: "This user doesn't exist",
     });
   }
+  // only admin can get users
   if (user.role !== "admin") {
     return res.status(403).json({
       message: "Only admin can get the users",
