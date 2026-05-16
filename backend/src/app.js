@@ -12,6 +12,7 @@ import orderRouter from "./routes/user/orders/order.route.js";
 import updateOrderStatusRouter from "./routes/admin/users/updateOrderStatus.route.js";
 import getAllOrderRouter from "./routes/admin/users/getAllOrder.route.js";
 import dashboardRoter from "./routes/admin/dashboard/dashboard.route.js";
+import bestSellingProduct from "./routes/admin/dashboard/bestSellingProduct.route.js";
 const app = express();
 
 app.use(express.json());
@@ -43,4 +44,6 @@ app.use("/", updateOrderStatusRouter);
 app.use("/", getAllOrderRouter);
 // dashboard router
 app.use("/", dashboardRoter);
+// getting best selling product router
+app.use("/", bestSellingProduct);
 export default app;

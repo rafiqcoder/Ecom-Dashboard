@@ -5,12 +5,15 @@ import {
   logoutController,
   registerController,
 } from "../../controller/auth/auth.controller.js";
-import { authValidate } from "../../validations/auth.validation.js";
+import {
+  authValidate,
+  loginValidation,
+} from "../../validations/auth.validation.js";
 import { identifyUser } from "../../middlewares/auth.middlewares.js";
 const authRouter = express.Router();
 
 authRouter.post("/register", authValidate, registerController);
-authRouter.post("/login", authValidate, loginController);
+authRouter.post("/login", loginValidation, loginController);
 authRouter.get("/get-me", identifyUser, getController);
-authRouter.post("/logout", logoutController)
+authRouter.post("/logout", logoutController);
 export default authRouter;
