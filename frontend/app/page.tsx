@@ -1,6 +1,9 @@
+import Header from "@/components/navberFooter/Header";
 
 export default function Home() {
-  return <>
-    <h1 className=" text-3xl font-medium text-red-500">Hellow zehan</h1>
-  </>;
+  return (
+    <>
+      <Header />
+    </>
+  );
 }

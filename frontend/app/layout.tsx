@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import ReduxProvider from "@/toolkit/ReduxProvider";
-import Protected from "@/components/protectedRoute/Protected";
+import Protected from "@/features/protectedRoute/Protected";
 
 export const metadata: Metadata = {
   title: "Create Next App",
