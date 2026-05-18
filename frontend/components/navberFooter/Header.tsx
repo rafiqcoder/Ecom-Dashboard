@@ -8,16 +8,16 @@ import { initialInterface } from "@/features/auth/authSlice/types/type";
 import Link from "next/link";
 import { FaShoppingCart } from "react-icons/fa";
 import Navber from "./Navber";
-import Menubar from "./Menubar";
+import Category from "../categories/Category";
 
 function Header() {
   const user = useSelector((state: { auth: initialInterface }) => state.auth);
 
   return (
-    <div className=" w-full">
-      <div className=" max-w-[1800px] mx-auto">
-        <div className=" px-5 py-5 border-b border-gray-400">
-          <header className=" flex items-center justify-between">
+    <div className=" w-full font-monserrat">
+      <div className="">
+        <div className=" py-5 border-b border-[#0000001A]">
+          <header className="px-3 flex items-center justify-between">
             <div className=" flex items-center gap-1">
               <div className=" px-2 ">
                 <Image
@@ -90,13 +90,12 @@ function Header() {
           </header>
         </div>
         {/* middle navber */}
-        <div>
+        <div className="">
           <Navber />
         </div>
-        {/* bottom menu */}
-        <div>
-          <Menubar />
-        </div>
+
+        {/* category header */}
+        <Category />
       </div>
     </div>
   );
