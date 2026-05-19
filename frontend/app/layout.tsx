@@ -17,7 +17,7 @@ export default function RootLayout({
     <html lang="en" className={` h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         <ReduxProvider>
-          <Protected><div className="max-w-[1800px] mx-auto">{children}</div></Protected>
+          <Protected><div className="">{children}</div></Protected>
         </ReduxProvider>
       </body>
     </html>

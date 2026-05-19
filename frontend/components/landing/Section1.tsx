@@ -49,15 +49,16 @@ function Section1() {
   }, [showingIdx]);
 
   const carouNum = useSelector((state: { carousel: { carouselIdx: number } }) => state.carousel.carouselIdx);
+  console.log(carouNum)
   return (
-    <div className=" relative font-lato min-h-[60vh] lg:h-[60vh] rounded overflow-hidden w-full">
-      <div className="h-full overflow-x-hidden flex relative z-40 md:w-[80%] w-full lg:w-[70%] items-center">
+    <div className=" relative font-lato min-h-[60vh] h-[300px] lg:h-[60vh] rounded overflow-hidden w-full px-4 py-6">
+      <div className="h-full overflow-x-hidden flex relative z-40 w-full items-center">
         {
           carouselData.map((item, idx) => {
             return (
-              <div key={idx} className=" shrink-0 relative bottom-16 left-[20%] w-full transition-all duration-700 ease-in-out" style={{ transform: `translateX(-${carouNum * 100}%)` }}>
-                <h3 className=" font-medium text-4xl text-white">{item.titleSm}</h3>
-                <h1 className=" font-semibold text-6xl  text-white md:mt-2 mt-1 lg:mt-3">{item.title}</h1>
+              <div key={idx} className=" shrink-0 relative bottom-0  lg:bottom-16 left-[10%] lg:left-[20%] w-full transition-all duration-700 ease-in-out" style={{ transform: `translateX(-${carouNum * 100}%)` }}>
+                <h3 className=" font-medium text-md sm:text-2xl text-xl md:text-3xl lg:text-4xl text-white">{item.titleSm}</h3>
+                <h1 className=" font-semibold md:text-5xl sm:text-4xl text-3xl lg:text-6xl  text-white md:mt-2 mt-1 lg:mt-3">{item.title}</h1>
                 <div className=" md:mt-7 mt-4 relative z-50">
                   <Link href={item.path} className=" ">
                     <Buttons>

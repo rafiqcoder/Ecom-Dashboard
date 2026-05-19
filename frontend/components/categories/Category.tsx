@@ -38,7 +38,7 @@ function Category() {
   const [showingCate, setShowingCate] = useState(10);
 
   return (
-    <div className=" max-w-[1600px] px-3 md:py-4 py-2 ">
+    <div className=" max-w-[1600px] px-3 md:py-4 py-2">
       <div className="flex items-center flex-wrap space-x-6 md:space-x-8 lg:space-x-10 gap-2 md:gap-4">
         {category.map((cate, idx) => {
           return (

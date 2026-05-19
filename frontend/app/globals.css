@@ -122,3 +122,16 @@
   background: #023337;
   width: 30%;
 }
+
+/* btn shadow */
+
+.btnShadow {
+  box-shadow: 0px 6px 12px #00000033;
+
+}
+
+/* image shadows */
+.imgShadow {
+  box-shadow: 0px 0px 4px #00000033;
+}
+

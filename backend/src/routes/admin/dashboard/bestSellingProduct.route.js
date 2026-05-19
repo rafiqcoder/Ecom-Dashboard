@@ -1,3 +1,4 @@
+// get best selling product for admin dashboard
 import express from "express";
 import { identifyUser } from "../../../middlewares/auth.middlewares.js";
 import { bestSellingProductController } from "../../../controller/admin/dashboard/bestSellingProduct.controller.js";

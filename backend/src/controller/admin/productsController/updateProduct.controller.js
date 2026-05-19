@@ -53,7 +53,7 @@ export const updateProductController = async (req, res) => {
     discountPrice,
     discountStart,
     discountEnd,
-    productCategory,
+    productCategory: productCategory.map((cat) => cat.toLowerCase()),
     productTag,
     stockQuantity,
     stockStatus,
