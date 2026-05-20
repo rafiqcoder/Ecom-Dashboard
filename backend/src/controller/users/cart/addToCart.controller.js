@@ -30,7 +30,7 @@ export const addToCartController = async (req, res, next) => {
       res.status(201).json({
         message: "This product is exist in your cart",
         success: true,
-        isProductAlreadyExist,
+        product: isProductAlreadyExist,
       });
       return;
     }
@@ -43,7 +43,7 @@ export const addToCartController = async (req, res, next) => {
     res.status(201).json({
       message: "Successfully added to cart",
       success: true,
-      newProduct,
+      product: newProduct,
     });
   } catch (error) {
     error.status = 500;

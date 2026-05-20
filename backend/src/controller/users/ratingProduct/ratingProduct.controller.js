@@ -1,3 +1,4 @@
+// user can rate product with commnet and out of 5 star 
 import RatingProductModel from "../../../models/user/ratingProduct/ratingProduct.model.js";
 
 export async function ratingProductController(req, res) {
@@ -10,7 +11,7 @@ export async function ratingProductController(req, res) {
       err: "Please provide a product id to rate the product",
     });
   }
-  const { rating } = req.body;
+  const { rating, comment } = req.body;
   if (!rating) {
     return res.status(400).json({
       message: "Rating is required",
@@ -23,6 +24,7 @@ export async function ratingProductController(req, res) {
     productId,
     userId: user._id,
     rating,
+    comment
   });
   res.status(201).json({
     message: "Product rated successfully",

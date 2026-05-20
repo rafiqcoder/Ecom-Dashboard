@@ -1,4 +1,3 @@
-import React from "react";
 import type { HeroSectionData } from "./types/type";
 import Image from "next/image";
 import Link from "next/link";
@@ -76,7 +75,7 @@ function Section2() {
     ],
   };
   return (
-    <div className=" md:absolute -top-24 z-40 w-full font-lato pb-6">
+    <div className=" lg:absolute -top-24 z-40 w-full font-lato pb-6 py-5">
       <div className=" px-6 md:px-10 lg:px-14 grid md:grid-cols-2 grid-cols-1 xl:grid-cols-3 lg:gap-8 md:gap-6 gap-4">
         <div className="imgShadow rounded-md lg:p-6 md:p-4 p-2 bg-white ">
           <h1 className=" text-black font-medium text-lg lg:text-xl">

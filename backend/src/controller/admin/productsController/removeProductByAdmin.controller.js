@@ -1,4 +1,5 @@
 import productModel from "../../../models/admin/createProducts/products.model.js";
+import RatingProductModel from "../../../models/user/ratingProduct/ratingProduct.model.js";
 
 export const removeProductControllerByAdmin = async (req, res) => {
   const user = req.user;
@@ -16,6 +17,8 @@ export const removeProductControllerByAdmin = async (req, res) => {
     });
   }
   const product = await productModel.findByIdAndDelete(productId);
+  // remove product review
+  await RatingProductModel.findOneAndDelete({ productId: productId });
   if (!product) {
     return res.status(404).json({
       message: "Product not found",

@@ -4,6 +4,6 @@ import { identifyUser } from "../../../../middlewares/auth.middlewares.js";
 
 const getRatingProductRouter = express.Router();
 // rating product by user
-getRatingProductRouter.get("/products/topRated", identifyUser, getTopRatedProductController);
+getRatingProductRouter.get("/products/topRated", getTopRatedProductController);
 
 export default getRatingProductRouter;

@@ -46,7 +46,7 @@ export const createNewProductController = async (req, res) => {
     discountEnd,
     stockQuantity,
     stockStatus,
-    productCategory: productCategory.map((cat) => cat.toLowerCase()),
+    productCategory: productCategory?.map((cat) => cat.toLowerCase()),
     productTag,
     poster: posterURL,
   });

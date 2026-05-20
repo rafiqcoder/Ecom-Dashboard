@@ -34,3 +34,55 @@ export interface HeroSectionData {
 
     promoBanners: BannerItem[];
 }
+
+
+// top rated product interface and product interface
+
+interface Rating {
+  _id: string;
+  userId: string;
+  productId: string;
+  rating: number;
+  comment: string;
+  createdAt?: string;
+  updatedAt?: string;
+  __v: number;
+}
+
+export interface Product {
+  _id: string;
+  name: string;
+  description: string;
+  price: number;
+
+  discountPrice: number;
+  discountStart: string;
+  discountEnd: string;
+
+  poster: string;
+
+  productCategory: string[];
+  productTag: string[];
+
+
+
+  stockQuantity: number;
+  stockStatus: boolean;
+
+  createdAt: string;
+  updatedAt: string;
+
+  __v: number;
+}
+
+export interface TopRatedProduct extends Product {
+    ratings: Rating[];
+}
+
+// top rated interface
+export interface TopRatedState {
+    products: TopRatedProduct[];
+    loading: boolean;
+    error: string | null;
+    message: string;
+}
