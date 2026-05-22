@@ -9,6 +9,7 @@ import { userCart } from '@/features/cart/hook/useCart';
 import { useSelector } from 'react-redux';
 import { initialInterface } from '@/features/auth/authSlice/types/type';
 import { useRouter } from 'next/navigation';
+import { CartSliceInterface } from '@/features/cart/toolkit/types/type';
 
 
 
@@ -16,11 +17,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
     image = '/api/placeholder/400/350',
     title = 'Radiant Glow Hydrating Serum',
     description = 'Gentle yet effective, our Radiance Boosting Foaming......',
-    rating = 5,
-    reviewCount = 342,
-    currentPrice = 29.99,
-    originalPrice = 39.99,
-    discount = 20,
+    rating,
+    reviewCount,
+    currentPrice,
+    originalPrice,
+    discount,
     productId
 }) => {
     const router = useRouter();
@@ -28,25 +29,27 @@ const ProductCard: React.FC<ProductCardProps> = ({
     const { addToCart } = userCart()
 
     // get user and check if user not login send hin in login page
-    const user = useSelector((state: {auth: initialInterface})   => state.auth);
+    const user = useSelector((state: { auth: initialInterface }) => state.auth);
     const addToCartHandle = async () => {
-        if(!user.success){
+        if (!user.success) {
             router.push("/login");
             return;
         }
-
+        await addToCart({ productId });
     }
+    const newProduct = useSelector((state: { cart: CartSliceInterface }) => state.cart);
     return (
-        <div className="w-full">
+        <div className="w-full md:h-[500px]">
             {/* Card Container */}
-            <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
+            <div className="bg-white h-full rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
 
                 {/* Image Container */}
                 <div className="relative bg-gradient-to-br from-gray-50 to-gray-100 h-72 flex items-center justify-center overflow-hidden">
                     <img
                         src={image}
                         alt={title}
-                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+
+                        className="w-full h-full object-contain hover:scale-105 transition-transform duration-500"
                     />
 
                     {/* Discount Badge */}
@@ -79,9 +82,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
                     {/* Rating Section */}
                     <div className="flex items-center gap-2">
-                        <div className="flex gap-1">
+                        {rating && <div className="flex gap-1">
                             {[...Array(5)].map((_, i) => (
-                                rating >= i ? <FaStar
+                                rating > i ? <FaStar
                                     key={i}
                                     size={16}
                                     className="fill-yellow-400"
@@ -90,13 +93,13 @@ const ProductCard: React.FC<ProductCardProps> = ({
                                     className="fill-yellow-400"
                                     style={{ color: '#FCD34D' }} />
                             ))}
-                        </div>
-                        <span
+                        </div>}
+                        {reviewCount && <span
                             className="text-xs font-medium"
                             style={{ color: '#00000099' }}
                         >
                             ({reviewCount.toLocaleString()} reviews)
-                        </span>
+                        </span>}
                     </div>
 
                     {/* Pricing Section */}
@@ -108,18 +111,18 @@ const ProductCard: React.FC<ProductCardProps> = ({
                             >
                                 ${currentPrice.toFixed(2)}
                             </span>
-                            <span
+                           {originalPrice && <span
                                 className="text-sm font-medium line-through"
                                 style={{ color: '#00000099' }}
                             >
-                                ${originalPrice.toFixed(2)}
-                            </span>
-                            <span
+                                ${originalPrice?.toFixed(2)}
+                            </span>}
+                            {discount &&<span
                                 className="text-xs font-bold px-2 py-1 bg-green-50 rounded"
                                 style={{ color: '#4EA674' }}
                             >
                                 {discount}% Off
-                            </span>
+                            </span>}
                         </div>
                     </div>
 
@@ -145,7 +148,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
                                 e.currentTarget.style.transform = 'translateY(0)';
                             }}
                         >
-                            Add to cart
+                            {newProduct.loading ? "Loading..." : "Add to cart"}
                         </button>
                     </div>
                 </div>

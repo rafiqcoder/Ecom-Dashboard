@@ -40,7 +40,6 @@ export async function getTopRatedProductController(req, res) {
   };
 });
 
-  console.log(withRating);
 
   return res.status(200).json({
     message: "Top rated products fetched successfully",

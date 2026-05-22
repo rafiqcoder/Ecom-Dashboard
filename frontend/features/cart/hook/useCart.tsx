@@ -1,19 +1,35 @@
-import { addToCartProducts } from "@/apis/cart/cart";
+import { addToCartProducts, getUserCart } from "@/apis/cart/cart";
 import { useDispatch } from "react-redux"
 import { setError, setLoading, setMessage, setProducts } from "../toolkit/cart.toolkit";
+import { Product } from "@/components/landing/types/type";
 
 export const userCart = () => {
     const dispatch = useDispatch()
+    // get cart product
+    async function getCartProduct() {
+        try {
+            dispatch(setLoading(true));
+            const response: { message: string, success: boolean, products: Product[] } = await getUserCart();
+            if (response.success) {
+                dispatch(setProducts(response.products));
+            }
+            dispatch(setMessage(response.message))
 
+
+        } catch (error: unknown) {
+            dispatch(setError(error.response?.data?.message || "Something went wrong"));
+        }
+        finally {
+            dispatch(setLoading(false));
+        }
+    }
     // function to add to cart products
     async function addToCart({ productId }: { productId: string }) {
         try {
             dispatch(setLoading(true));
             const response = await addToCartProducts(productId);
-            if (response.success) {
-                dispatch(setProducts(response.products));
-                dispatch(setMessage(response.message))
-            }
+            dispatch(setMessage(response.message))
+            await getCartProduct();
         } catch (error: unknown) {
             dispatch(setError(error.response?.data?.message || "Something went wrong"));
         }
@@ -22,7 +38,9 @@ export const userCart = () => {
         }
     }
 
+
     return {
-        addToCart
+        addToCart,
+        getCartProduct
     }
 }

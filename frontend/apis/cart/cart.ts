@@ -15,3 +15,15 @@ export async function addToCartProducts(productId: string) {
         }
     }
 }
+
+// get user cart products
+export async function getUserCart() {
+    try {
+        const response = await api.get(`/users/cart/products`);
+        return response.data;
+    } catch (error) {
+        if (error instanceof AxiosError) {
+            console.log(error);
+        }
+    }
+}

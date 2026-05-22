@@ -184,6 +184,7 @@ function Section2() {
               </Link>
             </div>
           </div>
+          
         </div>
       </div>
     </div>

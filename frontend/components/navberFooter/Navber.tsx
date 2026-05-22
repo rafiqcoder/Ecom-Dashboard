@@ -34,13 +34,13 @@ function Navber() {
           path: "/",
         },
         {
-          name: "Product",
-          path: "/product",
+          name: "Products",
+          path: "/products",
         },
         {
           name: "About Us",
           path: "/about",
-        },
+        },  
         {
           name: "Contact",
           path: "/contact",
@@ -52,7 +52,7 @@ function Navber() {
   const paths = usePathname();
   useEffect(() => {
     setPathName(paths)
-  }, [paths])
+  }, [paths]);
   return (
     <div className=" w-full border-b border-[#0000001A] py-2 md:py-4 lg:py-6">
       <nav className=" flex items-center justify-between px-3 ">

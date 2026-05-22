@@ -52,4 +52,5 @@ app.use("/", bestSellingProduct);
 app.use("/", ratingProductRouter);
 // get rating product by user
 app.use("/", getRatingProductRouter);
+
 export default app;

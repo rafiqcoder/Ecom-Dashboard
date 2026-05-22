@@ -9,9 +9,22 @@ import Link from "next/link";
 import { FaShoppingCart } from "react-icons/fa";
 import Navber from "./Navber";
 import Category from "../categories/Category";
+import { CartSliceInterface } from "@/features/cart/toolkit/types/type";
+import { useEffect } from "react";
+import { userCart } from "@/features/cart/hook/useCart";
 
 function Header() {
   const user = useSelector((state: { auth: initialInterface }) => state.auth);
+  // use cart
+  const { getCartProduct } = userCart()
+  // get cart products
+  useEffect(() => {
+    async function getCart() {
+      await getCartProduct();
+    }
+    getCart();
+  }, [])
+  const { products, loading, error, message } = useSelector((state: { cart: CartSliceInterface }) => state.cart);
 
   return (
     <div className=" w-full font-monserrat">
@@ -79,7 +92,8 @@ function Header() {
                 )}
               </div>{" "}
               <Link href={"/cart"}>
-                <div className=" flex items-center gap-1.5">
+                <div className=" flex items-center gap-1.5 relative">
+                  {user.success && <span className=" absolute -top-4 bg-[#4EA674] rounded-full px-[7px] text-white text-[13px] py-[1px] -right-3">{products.length}</span>}
                   <FaShoppingCart className="text-lg" />
                   <span className="text-[15px] font-medium cursor-pointer">
                     Cart

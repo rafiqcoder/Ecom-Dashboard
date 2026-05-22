@@ -34,5 +34,5 @@ productsRouter.delete("/admin/products/delete/:productId", identifyUser, removeP
 productsRouter.get("/products", identifyUser, getProductController);
 
 // get product by category
-productsRouter.get("/products/category/:category", identifyUser, getProductControllerByCategory);
+productsRouter.get("/products/category/:category", getProductControllerByCategory);
 export default productsRouter;

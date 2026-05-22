@@ -76,9 +76,9 @@ export interface Product {
 }
 
 export interface TopRatedProduct extends Product {
-    ratings: Rating[];
+   ratings: Rating[];
 }
-
+ 
 // top rated interface
 export interface TopRatedState {
     products: TopRatedProduct[];
