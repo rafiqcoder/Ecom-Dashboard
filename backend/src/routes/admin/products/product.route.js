@@ -31,7 +31,7 @@ productsRouter.patch(
 productsRouter.delete("/admin/products/delete/:productId", identifyUser, removeProductControllerByAdmin)
 
 // get all products
-productsRouter.get("/products", identifyUser, getProductController);
+productsRouter.get("/products", getProductController);
 
 // get product by category
 productsRouter.get("/products/category/:category", getProductControllerByCategory);

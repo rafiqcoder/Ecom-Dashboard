@@ -1,40 +1,38 @@
 export interface carouselData {
-    titleSm: string;
-    title: string;
-    btn: string;
-    path: string;
+  titleSm: string;
+  title: string;
+  btn: string;
+  path: string;
 }
 
-
 export interface BannerItem {
-    id?: number;
-    title: string;
-    subtitle?: string;
-    image: string;
-    buttonText?: string;
-    price?: string;
-    path: string;
+  id?: number;
+  title: string;
+  subtitle?: string;
+  image: string;
+  buttonText?: string;
+  price?: string;
+  path: string;
 }
 
 export interface GamingAccessoryItem {
-    id: number;
-    title: string;
-    image: string;
-    path: string;
+  id: number;
+  title: string;
+  image: string;
+  path: string;
 }
 
 export interface HeroSectionData {
-    fashionBanner: BannerItem;
+  fashionBanner: BannerItem;
 
-    gamingAccessories: {
-        title: string;
-        seeMore: string;
-        items: GamingAccessoryItem[];
-    };
+  gamingAccessories: {
+    title: string;
+    seeMore: string;
+    items: GamingAccessoryItem[];
+  };
 
-    promoBanners: BannerItem[];
+  promoBanners: BannerItem[];
 }
-
 
 // top rated product interface and product interface
 
@@ -64,8 +62,6 @@ export interface Product {
   productCategory: string[];
   productTag: string[];
 
-
-
   stockQuantity: number;
   stockStatus: boolean;
 
@@ -76,13 +72,25 @@ export interface Product {
 }
 
 export interface TopRatedProduct extends Product {
-   ratings: Rating[];
+  ratings: Rating[];
 }
- 
+
 // top rated interface
 export interface TopRatedState {
-    products: TopRatedProduct[];
-    loading: boolean;
-    error: string | null;
-    message: string;
+  products: TopRatedProduct[];
+  loading: boolean;
+  error: string | null;
+  message: string;
+  success: boolean;
+}
+
+// review card interface
+export interface ReviewInterface {
+  id: number;
+  name: string;
+  rating: number;
+  review: string;
+  avatarUrl: string;
+  date: string;
+  verified: boolean;
 }

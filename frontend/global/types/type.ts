@@ -39,7 +39,7 @@ export interface Product {
 
 
 // category slice interface
-export interface CategoryProductInterface {
+export interface ProductsFetchingInterface {
     products: Product[];
     loading: boolean;
     error: string | null;

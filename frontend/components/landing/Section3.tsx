@@ -12,17 +12,18 @@ import Loader from "../common/Loader";
 function Section3() {
   const dispatch = useDispatch();
   const { getTopRated } = useTopRatedProduct();
+  // geeting top rated product from redux store
+  const { products, loading, error, success } = useSelector(
+    (state: { topRatedProduct: TopRatedState }) => state.topRatedProduct,
+  );
   // calling api for set top rated products in redux store
   useEffect(() => {
     async function topRatedProducts() {
       await getTopRated();
     }
-    topRatedProducts();
+    if (success === false) topRatedProducts();
   }, []);
-  // geeting top rated product from redux store
-  const { products, loading, error, message } = useSelector(
-    (state: { topRatedProduct: TopRatedState }) => state.topRatedProduct,
-  );
+
   // make product carousel
 
   const [showingIdx, setShowingIdx] = useState<number>(0);
@@ -30,6 +31,7 @@ function Section3() {
     dispatch(setProductCarousel(showingIdx));
   }, [showingIdx]);
 
+  console.log(products);
   const carouNum = useSelector(
     (state: { carousel: { productCarouselIdx: number } }) =>
       state.carousel.productCarouselIdx,
@@ -40,7 +42,7 @@ function Section3() {
       <div className="flex items-center justify-between">
         <Heading title="Tranding Products" />
 
-        <Link href={"/trandingProducts"}>
+        <Link href={"/products/trandingProducts"}>
           <button className=" transition duration-300 hover:text-white px-5 py-2 hover:bg-[#4EA674] border border-[#4EA674] font-medium text-[14px] rounded-full cursor-pointer">
             View All
           </button>

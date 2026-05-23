@@ -5,6 +5,7 @@ import {
   setProducts,
   setLoading,
   setError,
+  setSuccess,
 } from "../toolkit/product.slice";
 
 export function useCategory() {
@@ -14,6 +15,7 @@ export function useCategory() {
       dispatch(setLoading(true));
       dispatch(setProducts([]));
       const data = await getProductByCategory({ category });
+      console.log(data)
       if (data.success) {
         dispatch(setProducts(data.products));
         dispatch(setMessage(data.message));
@@ -22,7 +24,9 @@ export function useCategory() {
       dispatch(setMessage(data.message));
       return;
     } catch (error) {
+      dispatch(setSuccess(false))
       dispatch(setError("Something went wrong"));
+      dispatch(setMessage("Products not available in this category"));
     } finally {
       dispatch(setLoading(false));
     }
