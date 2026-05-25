@@ -36,7 +36,7 @@ export const updateProductController = async (req, res) => {
     productTag,
   } = req.body;
   // checking is product exist
-  const isProduct = await productModel.findByIdAndUpdate(productId);
+  const isProduct = await productModel.findById(productId);
   if (!isProduct) {
     return res.status(404).json({
       message: "Product not found",
@@ -64,18 +64,20 @@ export const updateProductController = async (req, res) => {
       buffer: posterFile.buffer,
       fileName: `${Date.now()}-${posterFile.originalname}`,
       folder: "product-images",
+      profileFileId: isProduct.posterFileId ? isProduct.posterFileId : null,
     });
     updatedDataObject.poster = file.url;
+    updatedDataObject.posterFileId = file.fileId;
   }
   // update products
   const updatedProducts = await productModel.findByIdAndUpdate(
     productId,
     updatedDataObject,
-  );
+  );  
 
   return res.status(200).json({
     message: "Product update successfully",
     success: true,
-    product: updatedProducts
+    product: updatedProducts,
   });
 };

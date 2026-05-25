@@ -10,6 +10,7 @@ export interface data {
   lastSeen?: string;
   onlineStatus?: string;
   socketId?: string;
+  createdAt: string;
 }
 
 export interface initialInterface {
@@ -17,4 +18,5 @@ export interface initialInterface {
   data: data;
   loading: boolean,
   success: boolean;
+  message: string;
 }

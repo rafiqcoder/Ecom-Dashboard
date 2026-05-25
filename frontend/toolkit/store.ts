@@ -5,6 +5,8 @@ import topRatedSlice from "@/components/landing/toolkit/topRated.slice";
 import cartSlice from "@/features/cart/toolkit/cart.toolkit";
 import categoryProductSlice from "@/app/(user)/products/[category]/toolkit/product.slice";
 import allProductsSlice from "@/app/(user)/products/components/toolkit/allProducts.slice";
+import ordersSlice from "@/app/(user)/profile/toolkit/profile.slice"
+import globalMessageSlice from "@/global/toolkit/globalMessage.slice";
 export const store = configureStore({
     reducer: {
         auth: authSlice,
@@ -12,6 +14,8 @@ export const store = configureStore({
         topRatedProduct: topRatedSlice,
         cart: cartSlice,
         categoryProduct: categoryProductSlice,
-        allProduct: allProductsSlice
+        allProduct: allProductsSlice,
+        orders: ordersSlice,
+        globalMessage: globalMessageSlice
     }
 })

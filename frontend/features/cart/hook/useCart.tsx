@@ -2,6 +2,7 @@ import { addToCartProducts, getUserCart } from "@/apis/cart/cart";
 import { useDispatch } from "react-redux"
 import { setError, setLoading, setMessage, setProducts } from "../toolkit/cart.toolkit";
 import { Product } from "@/components/landing/types/type";
+import toast from "react-hot-toast";
 
 export const userCart = () => {
     const dispatch = useDispatch()
@@ -29,9 +30,11 @@ export const userCart = () => {
             dispatch(setLoading(true));
             const response = await addToCartProducts(productId);
             dispatch(setMessage(response.message))
+            toast.success(response.message)
             await getCartProduct();
         } catch (error: unknown) {
             dispatch(setError(error.response?.data?.message || "Something went wrong"));
+            toast.error(error.response?.data?.message || "Something went wrong")
         }
         finally {
             dispatch(setLoading(false));

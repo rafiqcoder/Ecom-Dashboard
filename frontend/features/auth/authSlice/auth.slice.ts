@@ -14,9 +14,11 @@ const initialState: initialInterface = {
     lastSeen: "",
     onlineStatus: "",
     socketId: "",
+    createdAt: "",
   },
   loading: false,
   success: false,
+  message: "",
 };
 
 export const authSlice = createSlice({
@@ -34,7 +36,17 @@ export const authSlice = createSlice({
       state.err = action.payload;
       state.success = false;
     },
+    setMessage: (state: initialInterface, action: { payload: string }) => {
+      state.message = action.payload;
+    },
+    resetState: (state: initialInterface) => {
+      state.data = initialState.data;
+      state.err = "";
+      state.success = false;
+      state.loading = false;
+      state.message = "";
+    },
   },
 });
-export const { setErrorState, setUserState, setLoading } = authSlice.actions;
+export const { setErrorState, setUserState, setLoading, setMessage, resetState } = authSlice.actions;
 export default authSlice.reducer;

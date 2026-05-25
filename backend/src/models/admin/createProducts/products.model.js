@@ -42,6 +42,10 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: [true, "Poster is required"],
     },
+    posterFileId: {
+      type: String,
+      default: null,
+    },
     // productImages: [
     //   {
     //     type: String,

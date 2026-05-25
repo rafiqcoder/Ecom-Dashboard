@@ -14,7 +14,7 @@ function Login() {
   const user = useSelector((state: { auth: initialInterface }) => state.auth);
   useEffect(() => {
     if (user.success === true) {
-      router.back();
+      router.push("/");
     }
   }, [user.success, router]);
 

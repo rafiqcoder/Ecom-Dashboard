@@ -1,11 +1,11 @@
-import React from 'react'
+import MyProfile from './components/MyProfile'
 import Profile from './components/Profile'
 
 function page() {
   return (
     <div>
       <div>
-        <Profile/>
+        <Profile />
       </div>
     </div>
   )

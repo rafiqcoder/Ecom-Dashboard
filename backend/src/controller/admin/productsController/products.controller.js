@@ -32,6 +32,7 @@ export const createNewProductController = async (req, res) => {
     buffer: imagesFile.buffer,
     fileName: `${Date.now()}-${imagesFile.originalname}`,
     folder: "product-images",
+    
   });
 
   //   const uploadImages = [];
