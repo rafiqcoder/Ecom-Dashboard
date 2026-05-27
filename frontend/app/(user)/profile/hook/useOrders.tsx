@@ -13,7 +13,6 @@ export const useOrders = () => {
         dispatch(resetState());
         try {
             const response = await getUserOrder();
-            console.log(response)
             if (response.success) {
                 dispatch(setData(response.products));
                 dispatch(setSuccess(true));

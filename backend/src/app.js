@@ -15,6 +15,7 @@ import bestSellingProduct from "./routes/admin/dashboard/bestSellingProduct.rout
 import ratingProductRouter from "./routes/admin/users/ratingProduct/ratingProduct.route.js";
 import getAllOrderRouter from "./routes/admin/users/order/getAllOrder.route.js";
 import getRatingProductRouter from "./routes/admin/users/ratingProduct/getTopRatedProduct.route.js";
+import getOrderByIdRouter from "./routes/user/orders/getOrderById.route.js";
 const app = express();
 
 app.use(express.json());
@@ -52,5 +53,7 @@ app.use("/", bestSellingProduct);
 app.use("/", ratingProductRouter);
 // get rating product by user
 app.use("/", getRatingProductRouter);
+// get order by id
+app.use("/", getOrderByIdRouter);
 
 export default app;

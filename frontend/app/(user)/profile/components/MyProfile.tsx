@@ -91,7 +91,6 @@ function MyProfile() {
 
   const month = Number(data.createdAt?.split("-")[1]);
   const year = data.createdAt?.split("-")[0]?.padStart(4, "0");
-
   return loading ? (
     <div className=" min-h-[500px] w-full flex items-center justify-center">
       <Loader />

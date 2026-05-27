@@ -53,39 +53,22 @@ function CartPage() {
     useState<CartItem[]>(initialCartItems);
 
   const handleIncrement = (id: number) => {
-    setCartItems((prev) =>
-      prev.map((item) =>
-        item.id === id
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
-      )
-    );
+    
   };
 
   const handleDecrement = (id: number) => {
-    setCartItems((prev) =>
-      prev.map((item) =>
-        item.id === id && item.quantity > 1
-          ? { ...item, quantity: item.quantity - 1 }
-          : item
-      )
-    );
+    
   };
 
   const handleRemove = (id: number) => {
-    setCartItems((prev) =>
-      prev.filter((item) => item.id !== id)
-    );
+    
   };
 
-  const subtotal = cartItems.reduce(
-    (acc, item) => acc + item.price * item.quantity,
-    0
-  );
+  // const subtotal = cartItems.reduce(
+    
+  // );
 
-  const tax = 799;
-  const shipping = 99;
-  const total = subtotal + tax + shipping;
+
 
   return (
     <section className="bg-white py-8 dark:bg-gray-900 md:py-16">
@@ -189,7 +172,7 @@ function CartPage() {
                     Original Price
                   </span>
                   <span className="font-medium text-gray-900 dark:text-white">
-                    ${subtotal.toLocaleString()}
+                    $400
                   </span>
                 </div>
 
@@ -198,7 +181,7 @@ function CartPage() {
                     Shipping
                   </span>
                   <span className="font-medium text-gray-900 dark:text-white">
-                    ${shipping}
+                    $10
                   </span>
                 </div>
 
@@ -207,7 +190,7 @@ function CartPage() {
                     Tax
                   </span>
                   <span className="font-medium text-gray-900 dark:text-white">
-                    ${tax}
+                    $30
                   </span>
                 </div>
 
@@ -218,7 +201,7 @@ function CartPage() {
                     </span>
 
                     <span className="text-lg font-bold text-gray-900 dark:text-white">
-                      ${total.toLocaleString()}
+                      $440
                     </span>
                   </div>
                 </div>

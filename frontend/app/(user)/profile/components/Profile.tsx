@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import MyProfile from "./MyProfile";
 import Navigation from "./Navigation";
@@ -10,8 +10,23 @@ import { initialInterface } from "@/global/types/type";
 import Image from "next/image";
 import { updateProfileHook } from "../hook/updateProfile";
 import { setProfileMessage } from "../toolkit/profile.slice";
+import { useRouter } from "next/navigation";
+import MyOrder from "./MyOrder";
+import { useAuth } from "@/features/auth/hook/useAuth";
 
 export default function Profile() {
+  // logout auth
+  const { handleLogout } = useAuth();
+  const router = useRouter();
+  // profiel data state
+  const { data, loading, success, err, message } = useSelector(
+    (state: { auth: initialInterface }) => state.auth,
+  );
+  useEffect(() => {
+    if (success === false) {
+      router.push("/login");
+    }
+  }, [data]);
   // dispatch new data
   const dispatch = useDispatch();
   // update profile picture
@@ -21,15 +36,6 @@ export default function Profile() {
   const { activeTab, editMode } = useSelector(
     (state: { orders: InitialInterface }) => state.orders,
   );
-
-  const [profileData, setProfileData] = useState({
-    firstName: "John",
-    lastName: "Doe",
-    email: "john.doe@example.com",
-    phone: "+1 (234) 567-890",
-    dateOfBirth: "1990-05-15",
-    gender: "Male",
-  });
 
   const [addresses, setAddresses] = useState([
     {
@@ -56,47 +62,10 @@ export default function Profile() {
     },
   ]);
 
-  const [orders] = useState([
-    {
-      id: "DP-001234",
-      date: "March 15, 2024",
-      total: "$149.99",
-      status: "Delivered",
-      items: 3,
-    },
-    {
-      id: "DP-001233",
-      date: "March 10, 2024",
-      total: "$89.50",
-      status: "Delivered",
-      items: 2,
-    },
-    {
-      id: "DP-001232",
-      date: "February 28, 2024",
-      total: "$199.99",
-      status: "In Transit",
-      items: 5,
-    },
-    {
-      id: "DP-001231",
-      date: "February 15, 2024",
-      total: "$75.00",
-      status: "Delivered",
-      items: 1,
-    },
-  ]);
-  // profiel data state
-  const { data, loading, success, err, message } = useSelector(
-    (state: { auth: initialInterface }) => state.auth,
-  );
   // set edit profile
   const [editProfileImg, setEditProfileImg] = useState(false);
 
-  // profile images
-  const [profileImg, setProfileImg] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null | ArrayBuffer>(null);
-
+  // update profile picture functionality
   const updateProfilePicture = async (
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
@@ -129,11 +98,19 @@ export default function Profile() {
     }
   };
 
+  // logout handle
+  const logoutHandle = async () => {
+    await handleLogout();
+    router.push("/");
+  }
+
+
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <section className="bg-white border-b border-gray-200 py-8">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-gray-900">My Account</h1>
@@ -141,7 +118,7 @@ export default function Profile() {
                 Manage your profile, orders, and preferences
               </p>
             </div>
-            <Link href="/shop">
+            <Link href="/products">
               <button
                 className="px-6 py-2 rounded-lg font-semibold text-white transition-transform hover:scale-105"
                 style={{ backgroundColor: "#4ea674" }}
@@ -154,7 +131,7 @@ export default function Profile() {
       </section>
 
       {/* Main Content */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Sidebar */}
           <div className="md:col-span-1">
@@ -200,6 +177,7 @@ export default function Profile() {
               {/* Logout Button */}
               <div className="p-4 border-t border-gray-200">
                 <button
+                  onClick={logoutHandle}
                   className="w-full px-4 py-2 border-2 rounded-lg font-semibold transition hover:bg-gray-50"
                   style={{ borderColor: "#4ea674", color: "#4ea674" }}
                 >
@@ -215,122 +193,7 @@ export default function Profile() {
             {activeTab === "profile" && <MyProfile />}
 
             {/* Orders Tab */}
-            {activeTab === "orders" && (
-              <div className="bg-white rounded-lg border border-gray-200 p-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-8">
-                  My Orders
-                </h2>
-
-                {orders.length > 0 ? (
-                  <div className="space-y-4">
-                    {orders.map((order) => (
-                      <div
-                        key={order.id}
-                        className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition"
-                      >
-                        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-center">
-                          <div>
-                            <p
-                              className="text-sm"
-                              style={{ color: "#00000099" }}
-                            >
-                              Order ID
-                            </p>
-                            <p className="font-bold text-gray-900">
-                              {order.id}
-                            </p>
-                          </div>
-                          <div>
-                            <p
-                              className="text-sm"
-                              style={{ color: "#00000099" }}
-                            >
-                              Date
-                            </p>
-                            <p className="font-semibold text-gray-900">
-                              {order.date}
-                            </p>
-                          </div>
-                          <div>
-                            <p
-                              className="text-sm"
-                              style={{ color: "#00000099" }}
-                            >
-                              Items
-                            </p>
-                            <p className="font-semibold text-gray-900">
-                              {order.items} items
-                            </p>
-                          </div>
-                          <div>
-                            <p
-                              className="text-sm"
-                              style={{ color: "#00000099" }}
-                            >
-                              Status
-                            </p>
-                            <p
-                              className="font-semibold px-3 py-1 rounded-full inline-block text-white text-sm"
-                              style={{
-                                backgroundColor:
-                                  order.status === "Delivered"
-                                    ? "#4ea674"
-                                    : "#ff9800",
-                              }}
-                            >
-                              {order.status}
-                            </p>
-                          </div>
-                          <div className="text-right">
-                            <p
-                              className="text-sm"
-                              style={{ color: "#00000099" }}
-                            >
-                              Total
-                            </p>
-                            <p className="font-bold text-lg text-gray-900">
-                              {order.total}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="mt-4 flex gap-3">
-                          <button
-                            className="text-sm font-semibold transition"
-                            style={{ color: "#4ea674" }}
-                          >
-                            View Details
-                          </button>
-                          <button
-                            className="text-sm font-semibold transition"
-                            style={{ color: "#4ea674" }}
-                          >
-                            Track Order
-                          </button>
-                          <button
-                            className="text-sm font-semibold transition"
-                            style={{ color: "#4ea674" }}
-                          >
-                            Return Items
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-12">
-                    <p style={{ color: "#00000099" }}>No orders yet</p>
-                    <Link href="/shop">
-                      <button
-                        className="mt-4 px-6 py-2 rounded-lg font-semibold text-white transition-transform hover:scale-105"
-                        style={{ backgroundColor: "#4ea674" }}
-                      >
-                        Start Shopping
-                      </button>
-                    </Link>
-                  </div>
-                )}
-              </div>
-            )}
+            {activeTab === "orders" && <MyOrder />}
 
             {/* Addresses Tab */}
             {activeTab === "addresses" && (

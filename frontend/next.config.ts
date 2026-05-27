@@ -4,7 +4,14 @@ const nextConfig: NextConfig = {
   /* config options here */
   images: {
     domains: ["ik.imagekit.io"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "encrypted-tbn0.gstatic.com",
+      },
+    ],
   },
+
 };
 
 export default nextConfig;

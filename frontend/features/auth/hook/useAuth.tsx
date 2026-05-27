@@ -5,9 +5,13 @@ import {
   setMessage,
   setUserState,
 } from "../authSlice/auth.slice";
-import { getMe, login, register } from "../services/auth.api";
+import { getMe, login, logout, register } from "../services/auth.api";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 export const useAuth = () => {
+  // router
+  const router = useRouter();
+  // dispatch
   const dispatch = useDispatch();
 
   // register handling
@@ -92,6 +96,30 @@ export const useAuth = () => {
       dispatch(
         setErrorState(error.response?.data?.message || "Someting went wrong"),
       );
+    } finally {
+      dispatch(setLoading(false));
+    }
+  }
+
+  // logout handle
+  async function handleLogout() {
+    try {
+      dispatch(setLoading(true));
+      const data = await logout();
+      if (data.success === true) {
+        dispatch(setUserState(data.user));
+        dispatch(setMessage(data.message));
+        toast.success(data.message);
+        return;
+      } else {
+        dispatch(setErrorState(data.message));
+        dispatch(setMessage(data.message));
+        toast.error(data.message);
+      }
+    } catch (error: unknown) {
+      dispatch(
+        setErrorState(error.response?.data?.message || "Someting went wrong"),
+      );
       toast.error(error.response?.data?.message || "Someting went wrong");
     } finally {
       dispatch(setLoading(false));
@@ -102,5 +130,6 @@ export const useAuth = () => {
     handleRegister,
     handleLogin,
     handleGetMe,
+    handleLogout
   };
 };
