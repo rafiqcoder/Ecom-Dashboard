@@ -7,24 +7,28 @@ const initialState: CartSliceInterface = {
     loading: false,
     error: null,
     message: "",
+    success: false
 }
 
 const cartSlice = createSlice({
     name: "cart",
     initialState: initialState,
     reducers: {
-        setProducts: (state: CartSliceInterface, action: { payload: Product[] }) => {
-            state.products = action.payload
+        setProducts: (state: CartSliceInterface, action: { payload: (Product & {quantity: number})[] }) => {
+            state.products = action.payload;
+            state.success = true;
         },
         setLoading: (state: CartSliceInterface, action: { payload: boolean }) => {
             state.loading = action.payload
         },
         setError: (state: CartSliceInterface, action: { payload: string | null }) => {
-            state.error = action.payload
+            state.error = action.payload;
+            state.success = false
         },
         setMessage: (state: CartSliceInterface, action: { payload: string }) => {
             state.message = action.payload
-        }
+        },
+       
     }
 })
 

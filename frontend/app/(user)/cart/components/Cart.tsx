@@ -1,77 +1,58 @@
-"use client"
+"use client";
 
 import { userCart } from "@/features/cart/hook/useCart";
 import { CartSliceInterface } from "@/features/cart/toolkit/types/type";
-import { useEffect, useState } from "react"
+import { useEffect } from "react";
+import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 
-interface CartItem {
-  id: number;
-  name: string;
-  image: string;
-  price: number;
-  quantity: number;
-}
-
-const initialCartItems: CartItem[] = [
-  {
-    id: 1,
-    name: 'PC system All in One APPLE iMac (2023)',
-    image:
-      "https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front.svg",
-    price: 1499,
-    quantity: 2,
-  },
-  {
-    id: 2,
-    name: "Apple Watch Series 8",
-    image:
-      "https://flowbite.s3.amazonaws.com/blocks/e-commerce/apple-watch-light.svg",
-    price: 598,
-    quantity: 1,
-  },
-  {
-    id: 3,
-    name: 'Apple MacBook Pro 16"',
-    image:
-      "https://flowbite.s3.amazonaws.com/blocks/e-commerce/macbook-pro-light.svg",
-    price: 1799,
-    quantity: 1,
-  },
-  {
-    id: 4,
-    name: 'Tablet APPLE iPad Pro 12.9"',
-    image:
-      "https://flowbite.s3.amazonaws.com/blocks/e-commerce/ipad-light.svg",
-    price: 699,
-    quantity: 1,
-  },
-];
-
 function CartPage() {
-  const [cartItems, setCartItems] =
-    useState<CartItem[]>(initialCartItems);
+  // use cart for calling user cart hook
+  const { getCartProduct, updateProductQuantity, removeFromCart } = userCart();
 
-  const handleIncrement = (id: number) => {
-    
+  // use selector to get cart products from redux store
+  const { products, loading, error, success } = useSelector(
+    (state: { cart: CartSliceInterface }) => state.cart,
+  );
+  useEffect(() => {
+    async function fetchProducts() {
+      await getCartProduct();
+    }
+    if (!success) {
+      fetchProducts();
+    }
+  }, []);
+
+  // increate product quantity
+  const handleIncrement = async (id: string) => {
+    await updateProductQuantity({ productId: id, quantityType: "increase" });
   };
 
-  const handleDecrement = (id: number) => {
-    
+  // decrease product quantity/
+  const handleDecrement = (id: string) => {
+    products.map(async (item) => {
+      if (item._id === id) {
+        item.quantity > 1
+          ? await updateProductQuantity({
+            productId: id,
+            quantityType: "decrease",
+          })
+          : toast.error("minimum quantity is 1");
+      }
+    });
   };
 
-  const handleRemove = (id: number) => {
-    
+  // remove product from cart
+  const handleRemove = async (id: string) => {
+    await removeFromCart({ productId: id });
   };
 
   // const subtotal = cartItems.reduce(
-    
+
   // );
 
-
-
   return (
-    <section className="bg-white py-8 dark:bg-gray-900 md:py-16">
+    <section className="bg-white py-8 md:py-16">
       <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
         <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
           Shopping Cart
@@ -81,15 +62,15 @@ function CartPage() {
           {/* Left Side */}
           <div className="w-full lg:max-w-4xl">
             <div className="space-y-6">
-              {cartItems.map((item) => (
+              {products.map((item) => (
                 <div
-                  key={item.id}
+                  key={item._id}
                   className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800"
                 >
                   <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
                     {/* Image */}
                     <img
-                      src={item.image}
+                      src={item.poster}
                       alt={item.name}
                       className="h-20 w-20 object-contain"
                     />
@@ -106,8 +87,8 @@ function CartPage() {
                         </button>
 
                         <button
-                          onClick={() => handleRemove(item.id)}
-                          className="text-sm text-red-500 hover:underline"
+                          onClick={() => handleRemove(item._id)}
+                          className="text-sm cursor-pointer text-red-500 hover:underline"
                         >
                           Remove
                         </button>
@@ -118,9 +99,7 @@ function CartPage() {
                     <div className="flex items-center gap-4">
                       <div className="flex items-center">
                         <button
-                          onClick={() =>
-                            handleDecrement(item.id)
-                          }
+                          onClick={() => handleDecrement(item._id)}
                           className="flex h-8 w-8 items-center justify-center rounded border border-gray-300 bg-gray-100"
                         >
                           -
@@ -134,9 +113,7 @@ function CartPage() {
                         />
 
                         <button
-                          onClick={() =>
-                            handleIncrement(item.id)
-                          }
+                          onClick={() => handleIncrement(item._id)}
                           className="flex h-8 w-8 items-center justify-center rounded border border-gray-300 bg-gray-100"
                         >
                           +
@@ -147,7 +124,8 @@ function CartPage() {
                         <p className="font-bold text-gray-900 dark:text-white">
                           $
                           {(
-                            item.price * item.quantity
+                            (item.price - item.discountPrice) *
+                            item.quantity
                           ).toLocaleString()}
                         </p>
                       </div>
@@ -168,29 +146,43 @@ function CartPage() {
 
               <div className="mt-6 space-y-4">
                 <div className="flex justify-between">
-                  <span className="text-gray-500">
-                    Original Price
-                  </span>
+                  <span className="text-gray-500">Original Price</span>
                   <span className="font-medium text-gray-900 dark:text-white">
-                    $400
+                    {products
+                      .reduce(
+                        (total, product) =>
+                          total +
+                          (product.price - product.discountPrice) *
+                          product.quantity,
+                        0,
+                      )
+                      .toLocaleString()}
                   </span>
                 </div>
 
                 <div className="flex justify-between">
-                  <span className="text-gray-500">
-                    Shipping
-                  </span>
+                  <span className="text-gray-500">Shipping</span>
                   <span className="font-medium text-gray-900 dark:text-white">
-                    $10
+                    $
+                    {products
+                      .reduce(
+                        (total, product) => total + product.quantity * 5,
+                        0,
+                      )
+                      .toLocaleString()}
                   </span>
                 </div>
 
                 <div className="flex justify-between">
-                  <span className="text-gray-500">
-                    Tax
-                  </span>
+                  <span className="text-gray-500">Tax</span>
                   <span className="font-medium text-gray-900 dark:text-white">
-                    $30
+                    $
+                    {products
+                      .reduce(
+                        (total, product) => total + product.quantity * 2,
+                        0,
+                      )
+                      .toLocaleString()}
                   </span>
                 </div>
 
@@ -201,7 +193,24 @@ function CartPage() {
                     </span>
 
                     <span className="text-lg font-bold text-gray-900 dark:text-white">
-                      $440
+                      $
+                      {(
+                        products.reduce(
+                          (total, product) =>
+                            total +
+                            (product.price - product.discountPrice) *
+                            product.quantity,
+                          0,
+                        ) +
+                        products.reduce(
+                          (total, product) => total + product.quantity * 5,
+                          0,
+                        ) +
+                        products.reduce(
+                          (total, product) => total + product.quantity * 2,
+                          0,
+                        )
+                      ).toLocaleString()}
                     </span>
                   </div>
                 </div>
@@ -212,10 +221,7 @@ function CartPage() {
               </button>
 
               <div className="mt-4 text-center">
-                <a
-                  href="#"
-                  className="text-sm text-blue-600 hover:underline"
-                >
+                <a href="#" className="text-sm text-blue-600 hover:underline">
                   Continue Shopping
                 </a>
               </div>

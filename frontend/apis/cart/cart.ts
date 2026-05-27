@@ -27,3 +27,27 @@ export async function getUserCart() {
         }
     }
 }
+
+// update product quantity
+export async function updateCartProductQuantity({ productId, quantityType }: { productId: string, quantityType: "increase" | "decrease" }) {
+    try {
+        const response = await api.patch(`/product/update/quantity/${productId}`, {state: quantityType });
+        return response.data;
+    } catch (error) {
+        if (error instanceof AxiosError) {
+            console.log(error);
+        }
+    }
+}
+
+// remove from cart products
+export async function removeProductFromCart(productId: string) {
+    try {
+        const response = await api.delete(`/users/cart/product/${productId}`);
+        return response.data;
+    } catch (error) {
+        if (error instanceof AxiosError) {
+            console.log(error);
+        }
+    }
+}
