@@ -5,7 +5,6 @@ import Cart from './components/Cart'
 function page() {
     return (
         <div>
-            <Heading title='Cart' />
             <Cart />
         </div>
     )

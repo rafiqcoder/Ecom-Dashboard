@@ -1,0 +1,194 @@
+"use client";
+import { useState } from "react";
+import { IoClose } from "react-icons/io5";
+function CreateAddress({
+  isAddress,
+  setIsAddress,
+}: {
+  isAddress: boolean;
+  setIsAddress: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    addressLine1: "",
+    city: "",
+    state: "",
+    zipCode: "",
+    country: "",
+  });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // Handle form submission
+    console.log(formData);
+  };
+  return (
+    <div className=" fixed z-50 top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 bg-white px-16 rounded-md py-8">
+      <div className=" absolute top-4 right-4 text-xl">
+        <IoClose onClick={() => setIsAddress(false)} />
+      </div>
+      <h2 className="text-2xl font-bold text-gray-900 mb-8">Add New Address</h2>
+      <form
+        onSubmit={handleSubmit}
+        className="grid grid-cols-1 md:grid-cols-2 gap-8"
+      >
+        {/* Name */}
+        <div>
+          <label
+            htmlFor="name"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Full Name <span style={{ color: "red" }}>*</span>
+          </label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            className="w-full px-4 py-3 rounded-lg border border-gray-200"
+            placeholder="Enter your full name"
+            required
+          />
+        </div>
+
+        {/* Phone */}
+        <div>
+          <label
+            htmlFor="phone"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Phone Number <span style={{ color: "red" }}>*</span>
+          </label>
+          <input
+            type="text"
+            id="phone"
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+            className="w-full px-4 py-3 rounded-lg border border-gray-200"
+            placeholder="Enter your phone number"
+            required
+          />
+        </div>
+
+        {/* Street Address */}
+        <div>
+          <label
+            htmlFor="addressLine1"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Street Address <span style={{ color: "red" }}>*</span>
+          </label>
+          <input
+            type="text"
+            id="addressLine1"
+            name="addressLine1"
+            value={formData.addressLine1}
+            onChange={handleChange}
+            className="w-full px-4 py-3 rounded-lg border border-gray-200"
+            placeholder="Street Address, P.O. Box, Company name, etc."
+            required
+          />
+        </div>
+
+        {/* City */}
+        <div>
+          <label
+            htmlFor="city"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            City <span style={{ color: "red" }}>*</span>
+          </label>
+          <input
+            type="text"
+            id="city"
+            name="city"
+            value={formData.city}
+            onChange={handleChange}
+            className="w-full px-4 py-3 rounded-lg border border-gray-200"
+            placeholder="Enter your city"
+            required
+          />
+        </div>
+
+        {/* State */}
+        <div>
+          <label
+            htmlFor="state"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            State <span style={{ color: "red" }}>*</span>
+          </label>
+          <input
+            type="text"
+            id="state"
+            name="state"
+            value={formData.state}
+            onChange={handleChange}
+            className="w-full px-4 py-3 rounded-lg border border-gray-200"
+            placeholder="Enter your state"
+            required
+          />
+        </div>
+
+        {/* Zip Code */}
+        <div>
+          <label
+            htmlFor="zipCode"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            ZIP Code <span style={{ color: "red" }}>*</span>
+          </label>
+          <input
+            type="text"
+            id="zipCode"
+            name="zipCode"
+            value={formData.zipCode}
+            onChange={handleChange}
+            className="w-full px-4 py-3 rounded-lg border border-gray-200"
+            placeholder="Enter your ZIP code"
+            required
+          />
+        </div>
+
+        {/* Country */}
+        <div>
+          <label
+            htmlFor="country"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Country <span style={{ color: "red" }}>*</span>
+          </label>
+          <input
+            type="text"
+            id="country"
+            name="country"
+            value={formData.country}
+            onChange={handleChange}
+            className="w-full px-4 py-3 rounded-lg border border-gray-200"
+            placeholder="Enter your country"
+            required
+          />
+        </div>
+
+        {/* Save Address Button */}
+        <div className="md:col-span-2 mt-4">
+          <button
+            type="submit"
+            className="px-4 py-3 rounded-lg font-semibold text-white transition"
+            style={{ backgroundColor: "#4ea674" }}
+          >
+            Save Address
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+export default CreateAddress;

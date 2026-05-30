@@ -29,7 +29,7 @@ function Header() {
   );
 
   return (
-    <div className=" w-full font-monserrat">
+    <div className=" max-w-[1800px] mx-auto font-monserrat bg-white">
       <div className="">
         <div className=" py-5 border-b border-[#0000001A]">
           <header className="px-3 flex items-center justify-between">

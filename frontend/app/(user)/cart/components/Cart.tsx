@@ -2,9 +2,10 @@
 
 import { userCart } from "@/features/cart/hook/useCart";
 import { CartSliceInterface } from "@/features/cart/toolkit/types/type";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
+import CheckoutConfirmation from "./ConfirmOrder";
 
 function CartPage() {
   // use cart for calling user cart hook
@@ -34,9 +35,9 @@ function CartPage() {
       if (item._id === id) {
         item.quantity > 1
           ? await updateProductQuantity({
-            productId: id,
-            quantityType: "decrease",
-          })
+              productId: id,
+              quantityType: "decrease",
+            })
           : toast.error("minimum quantity is 1");
       }
     });
@@ -50,11 +51,20 @@ function CartPage() {
   // const subtotal = cartItems.reduce(
 
   // );
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+
+  useEffect(() => {
+    if(isVisible){
+      document.body.style.overflow = "hidden";
+    }else{
+      document.body.style.overflow = "auto";
+    }
+  }, [isVisible])
 
   return (
-    <section className="bg-white py-8 md:py-16">
-      <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
-        <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
+    <section className="bg-white py-4 md:py-6">
+      <div className="mx-auto max-w-screen px-4 2xl:px-0">
+        <h2 className="text-2xl font-semibold text-gray-900">
           Shopping Cart
         </h2>
 
@@ -65,7 +75,7 @@ function CartPage() {
               {products.map((item) => (
                 <div
                   key={item._id}
-                  className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800"
+                  className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm   "
                 >
                   <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
                     {/* Image */}
@@ -77,12 +87,12 @@ function CartPage() {
 
                     {/* Content */}
                     <div className="flex-1">
-                      <h3 className="text-base font-medium text-gray-900 dark:text-white">
+                      <h3 className="text-base font-medium text-gray-900">
                         {item.name}
                       </h3>
 
                       <div className="mt-4 flex items-center gap-4">
-                        <button className="text-sm text-gray-500 hover:text-black dark:hover:text-white">
+                        <button className="text-sm text-gray-500 transition duration-300 hover:text-gray-700">
                           Add to Favorites
                         </button>
 
@@ -109,7 +119,7 @@ function CartPage() {
                           type="text"
                           value={item.quantity}
                           readOnly
-                          className="w-12 border-0 bg-transparent text-center text-sm font-medium text-gray-900 dark:text-white"
+                          className="w-12 border-0 bg-transparent text-center text-sm font-medium text-gray-900 "
                         />
 
                         <button
@@ -121,7 +131,7 @@ function CartPage() {
                       </div>
 
                       <div className="w-24 text-right">
-                        <p className="font-bold text-gray-900 dark:text-white">
+                        <p className="font-bold text-gray-900 ">
                           $
                           {(
                             (item.price - item.discountPrice) *
@@ -139,21 +149,24 @@ function CartPage() {
           {/* Right Side */}
           <div className="mt-8 w-full max-w-md space-y-6 lg:mt-0">
             {/* Order Summary */}
-            <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+            <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm ">
+              <h3 className="text-xl font-semibold text-gray-900">
                 Order Summary
               </h3>
 
               <div className="mt-6 space-y-4">
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Original Price</span>
-                  <span className="font-medium text-gray-900 dark:text-white">
+                  <span className="text-gray-800 font-medium">
+                    Original Price
+                  </span>
+                  <span className="font-medium text-gray-900">
+                    $
                     {products
                       .reduce(
                         (total, product) =>
                           total +
                           (product.price - product.discountPrice) *
-                          product.quantity,
+                            product.quantity,
                         0,
                       )
                       .toLocaleString()}
@@ -161,8 +174,8 @@ function CartPage() {
                 </div>
 
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Shipping</span>
-                  <span className="font-medium text-gray-900 dark:text-white">
+                  <span className="text-gray-800 font-medium">Shipping</span>
+                  <span className="font-medium text-gray-900 ">
                     $
                     {products
                       .reduce(
@@ -174,8 +187,8 @@ function CartPage() {
                 </div>
 
                 <div className="flex justify-between">
-                  <span className="text-gray-500">Tax</span>
-                  <span className="font-medium text-gray-900 dark:text-white">
+                  <span className="text-gray-800 font-medium">Tax</span>
+                  <span className="font-medium text-gray-900 ">
                     $
                     {products
                       .reduce(
@@ -186,20 +199,20 @@ function CartPage() {
                   </span>
                 </div>
 
-                <div className="border-t border-gray-200 pt-4 dark:border-gray-700">
+                <div className="border-t border-gray-200 pt-4 ">
                   <div className="flex justify-between">
-                    <span className="text-lg font-bold text-gray-900 dark:text-white">
+                    <span className="text-lg font-bold text-gray-900 ">
                       Total
                     </span>
 
-                    <span className="text-lg font-bold text-gray-900 dark:text-white">
+                    <span className="text-lg font-bold text-gray-900 ">
                       $
                       {(
                         products.reduce(
                           (total, product) =>
                             total +
                             (product.price - product.discountPrice) *
-                            product.quantity,
+                              product.quantity,
                           0,
                         ) +
                         products.reduce(
@@ -216,7 +229,7 @@ function CartPage() {
                 </div>
               </div>
 
-              <button className="mt-6 w-full rounded-lg bg-blue-600 px-5 py-3 text-sm font-medium text-white hover:bg-blue-700">
+              <button onClick={() => setIsVisible(true)} className="mt-6 w-full rounded-lg bg-[#4ea674] px-5 py-3 text-sm font-medium text-white ">
                 Proceed to Checkout
               </button>
 
@@ -228,7 +241,7 @@ function CartPage() {
             </div>
 
             {/* Voucher */}
-            <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
+            <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm ">
               <form className="space-y-4">
                 <div>
                   <label className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
@@ -244,7 +257,7 @@ function CartPage() {
 
                 <button
                   type="submit"
-                  className="w-full rounded-lg bg-blue-600 px-5 py-3 text-sm font-medium text-white hover:bg-blue-700"
+                  className="w-full rounded-lg bg-[#4ea674] px-5 py-3 text-sm font-medium text-white "
                 >
                   Apply Code
                 </button>
@@ -253,6 +266,12 @@ function CartPage() {
           </div>
         </div>
       </div>
+
+      {isVisible && (
+        <div className=" fixed top-[50%] left-[50%] z-50 -translate-x-1/2 -translate-y-1/2">
+          <CheckoutConfirmation isVisible={isVisible} setIsVisible={setIsVisible} />
+        </div>
+      )}
     </section>
   );
 }
