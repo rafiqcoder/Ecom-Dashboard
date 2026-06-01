@@ -16,6 +16,7 @@ import ratingProductRouter from "./routes/admin/users/ratingProduct/ratingProduc
 import getAllOrderRouter from "./routes/admin/users/order/getAllOrder.route.js";
 import getRatingProductRouter from "./routes/admin/users/ratingProduct/getTopRatedProduct.route.js";
 import getOrderByIdRouter from "./routes/user/orders/getOrderById.route.js";
+import addressRouter from "./routes/user/address/address.route.js";
 const app = express();
 
 app.use(express.json());
@@ -55,5 +56,6 @@ app.use("/", ratingProductRouter);
 app.use("/", getRatingProductRouter);
 // get order by id
 app.use("/", getOrderByIdRouter);
-
+// address router
+app.use("/", addressRouter);
 export default app;

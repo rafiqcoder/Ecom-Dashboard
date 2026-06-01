@@ -1,13 +1,24 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
+import { useAddress } from "../hook/useAddress";
+import { useSelector } from "react-redux";
+import { AddressInterface } from "@/global/types/type";
 function CreateAddress({
+  addressId,
   isAddress,
   setIsAddress,
+  setAddressId,
 }: {
   isAddress: boolean;
   setIsAddress: React.Dispatch<React.SetStateAction<boolean>>;
+  addressId?: string | null;
+  setAddressId?: React.Dispatch<React.SetStateAction<string | null>>;
 }) {
+  // use addresss hook
+  const { createAddress } = useAddress();
+
+  // address state
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -17,19 +28,61 @@ function CreateAddress({
     zipCode: "",
     country: "",
   });
+
+  // save data in state
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+
+  // submit handler
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Handle form submission
-    console.log(formData);
+    await createAddress({
+      name: formData.name,
+      phone: formData.phone,
+      addressLine1: formData.addressLine1,
+      city: formData.city,
+      state: formData.state,
+      zipCode: formData.zipCode,
+      country: formData.country,
+    });
+    setIsAddress(false);
+    setAddressId?.(null);
   };
+
+  // get address data from redux store
+  const addressData = useSelector(
+    (state: { address: AddressInterface }) => state.address,
+  );
+
+  // find address by id
+  useEffect(() => {
+    if(addressId){
+      const findAddress = addressData?.data?.find((address) => address._id === addressId);
+      if(findAddress){
+        setFormData({
+          name: findAddress.fullName,
+          phone: findAddress.phone,
+          addressLine1: findAddress.streetAddress,
+          city: findAddress.city,
+          state: findAddress.state,
+          zipCode: findAddress.postalCode,
+          country: findAddress.country,
+        });
+      }
+    }
+  }, [addressId])
+
   return (
     <div className=" fixed z-50 top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 bg-white px-16 rounded-md py-8">
       <div className=" absolute top-4 right-4 text-xl">
-        <IoClose onClick={() => setIsAddress(false)} />
+        <IoClose
+          onClick={() => {
+            setIsAddress(false);
+            setAddressId?.(null);
+          }}
+        />
       </div>
       <h2 className="text-2xl font-bold text-gray-900 mb-8">Add New Address</h2>
       <form

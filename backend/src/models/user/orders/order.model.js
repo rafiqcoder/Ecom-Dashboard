@@ -73,6 +73,7 @@ const orderSchema = new mongoose.Schema(
       required: [true, "Payment status is requried"],
       enum: ["pending", "paid", "failed", "refunded"],
     },
+    
   },
   { timestamps: true },
 );

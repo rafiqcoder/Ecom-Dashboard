@@ -72,3 +72,26 @@ export interface initialInterface {
   success: boolean;
   message: string;
 }
+
+// address interface
+export interface AddressData {
+  _id: string;
+  userId: string;
+  fullName: string;
+  phone: string;
+  streetAddress: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+export interface AddressInterface {
+  loading: boolean;
+  error: string;
+  message: string;
+  data: AddressData[];
+  success: boolean;
+}
