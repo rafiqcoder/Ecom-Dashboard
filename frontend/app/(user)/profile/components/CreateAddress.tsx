@@ -16,7 +16,7 @@ function CreateAddress({
   setAddressId?: React.Dispatch<React.SetStateAction<string | null>>;
 }) {
   // use addresss hook
-  const { createAddress } = useAddress();
+  const { createAddress, editAddress } = useAddress();
 
   // address state
   const [formData, setFormData] = useState({
@@ -38,17 +38,29 @@ function CreateAddress({
   // submit handler
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await createAddress({
-      name: formData.name,
-      phone: formData.phone,
-      addressLine1: formData.addressLine1,
-      city: formData.city,
-      state: formData.state,
-      zipCode: formData.zipCode,
-      country: formData.country,
-    });
-    setIsAddress(false);
-    setAddressId?.(null);
+    if (!isAddress && !addressId) {
+      await createAddress({
+        name: formData.name,
+        phone: formData.phone,
+        addressLine1: formData.addressLine1,
+        city: formData.city,
+        state: formData.state,
+        zipCode: formData.zipCode,
+        country: formData.country,
+      });
+    } else if (addressId && isAddress) {
+      await editAddress(addressId, {
+        name: formData.name,
+        phone: formData.phone,
+        addressLine1: formData.addressLine1,
+        city: formData.city,
+        state: formData.state,
+        zipCode: formData.zipCode,
+        country: formData.country,
+      });
+      setIsAddress(false);
+      setAddressId?.(null);
+    }
   };
 
   // get address data from redux store
@@ -58,9 +70,11 @@ function CreateAddress({
 
   // find address by id
   useEffect(() => {
-    if(addressId){
-      const findAddress = addressData?.data?.find((address) => address._id === addressId);
-      if(findAddress){
+    if (addressId) {
+      const findAddress = addressData?.data?.find(
+        (address) => address._id === addressId,
+      );
+      if (findAddress) {
         setFormData({
           name: findAddress.fullName,
           phone: findAddress.phone,
@@ -72,7 +86,7 @@ function CreateAddress({
         });
       }
     }
-  }, [addressId])
+  }, [addressId]);
 
   return (
     <div className=" fixed z-50 top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 bg-white px-16 rounded-md py-8">

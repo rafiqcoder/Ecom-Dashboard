@@ -43,14 +43,16 @@ const addressSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-
     country: {
       type: String,
       required: true,
       default: "United States",
     },
-    
-    
+    // default address
+    isDefault: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

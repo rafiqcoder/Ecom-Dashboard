@@ -13,9 +13,14 @@ const Register = () => {
   const user = useSelector((state: { auth: initialInterface }) => state.auth);
   useEffect(() => {
     if (user.success === true) {
-      router.back();
+      if(user.data?.role === "user"){
+        router.push("/");
+      }
+      if(user.data?.role === "admin"){
+        router.push("/admin");
+      }
     }
-  }, [user.success]);
+  }, [user.success, router]);
 
   // import useAuth
   const { handleRegister } = useAuth();

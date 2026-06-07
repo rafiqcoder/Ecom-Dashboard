@@ -72,7 +72,7 @@ export const useAuth = () => {
       dispatch(
         setErrorState(error.response?.data?.message || "Someting went wrong"),
       );
-      toast.error(error.response?.data?.message || "Someting went wrong");
+      toast.error(error.response.data.error[0].msg || "Someting went wrong");
     } finally {
       dispatch(setLoading(false));
     }

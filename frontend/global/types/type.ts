@@ -84,6 +84,7 @@ export interface AddressData {
   state: string;
   postalCode: string;
   country: string;
+  isDefault: boolean;
   createdAt: string;
   updatedAt: string;
   __v: number;

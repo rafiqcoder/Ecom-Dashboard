@@ -1,63 +1,14 @@
 "use client";
+import { useSelector } from "react-redux";
+import { AddressInterface } from "@/global/types/type";
+import { useEffect, useState } from "react";
+import { useAddress } from "../../profile/hook/useAddress";
+import Link from "next/link";
+import { CartSliceInterface } from "@/features/cart/toolkit/types/type";
+import { createOrder } from "../hook/createOrder.hook";
 
-import { useState } from "react";
-
-interface OrderItem {
-  id: number;
-  name: string;
-  variant?: string;
-  quantity: number;
-  price: number;
-  image: string;
-}
-
-interface Address {
-  name: string;
-  street: string;
-  city: string;
-  state: string;
-  zip: string;
-  country: string;
-}
-
-const ORDER_ITEMS: OrderItem[] = [
-  {
-    id: 1,
-    name: "Premium Wireless Headphones",
-    variant: "Midnight Black",
-    quantity: 1,
-    price: 129.0,
-    image: "🎧",
-  },
-  {
-    id: 2,
-    name: "USB-C Fast Charger",
-    variant: "65W",
-    quantity: 2,
-    price: 19.0,
-    image: "🔌",
-  },
-  {
-    id: 3,
-    name: "Phone Case",
-    variant: "Midnight / Matte",
-    quantity: 1,
-    price: 24.99,
-    image: "📱",
-  },
-];
-
-const SHIPPING_ADDRESS: Address = {
-  name: "Sarah Johnson",
-  street: "42 Maple Street, Apt 3B",
-  city: "New York",
-  state: "NY",
-  zip: "10012",
-  country: "United States",
-};
-
+// tax rate
 const TAX_RATE = 0.08875;
-const SHIPPING_THRESHOLD = 75;
 
 function generateOrderId(): string {
   return "ORD-" + Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -65,33 +16,85 @@ function generateOrderId(): string {
 
 type ModalState = "idle" | "processing" | "success";
 
-export default function CheckoutConfirmation({isVisible, setIsVisible}: {isVisible: boolean, setIsVisible: (value: boolean) => void}) {
+export default function CheckoutConfirmation({
+  isVisible,
+  setIsVisible,
+}: {
+  isVisible: boolean;
+  setIsVisible: (value: boolean) => void;
+}) {
+  // use address hook
+  const { getUserAddresses } = useAddress();
+  // addresses from redux store
+  const SHIPPING_ADDRESSES = useSelector(
+    (state: { address: AddressInterface }) => state.address,
+  );
+  // if shipping address not stored in redux then store them in redux store
+  useEffect(() => {
+    async function getUserAddressFunc() {
+      await getUserAddresses();
+    }
+    if (SHIPPING_ADDRESSES.success === false) {
+      getUserAddressFunc();
+    }
+  }, []);
+
+  // cancle order
+  const handleCancel = () => {
+    setIsVisible(false);
+  };
+
+  // order items from redux store
+  const ORDER_ITEMS = useSelector(
+    (state: { cart: CartSliceInterface }) => state.cart,
+  );
+
+  // count subtotal of products
+
+  const subtotal = ORDER_ITEMS.products.reduce(
+    (sum, item) => sum + (item.price - item.discountPrice) * item.quantity,
+    0,
+  );
+  const shipping = ORDER_ITEMS.products
+    .reduce((total, product) => total + product.quantity * 5, 0)
+    .toLocaleString();
+  const tax = (Number(subtotal) * TAX_RATE).toFixed(2);
+  const total = Number(subtotal) + Number(shipping) + Number(tax);
+
+  // payment type state
+  const [paymentType, setPaymentType] = useState("cashOnDelivery");
+
+  // create order hook
+  const { createOrderHook } = createOrder();
+
+  // handle submit order
+
   const [modalState, setModalState] = useState<ModalState>("idle");
   const [orderId, setOrderId] = useState("");
 
-  const subtotal = ORDER_ITEMS.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0,
-  );
-  const shipping = subtotal >= SHIPPING_THRESHOLD ? 0 : 9.99;
-  const tax = subtotal * TAX_RATE;
-  const total = subtotal + shipping + tax;
-
+  // confirm orders states
   const handleConfirm = async () => {
     setModalState("processing");
-    await new Promise((r) => setTimeout(r, 2000));
+    await createOrderHook({
+      paymentType,
+      paymentStatus: "pending",
+      addressId: SHIPPING_ADDRESSES.data?.find(
+        (data) => data.isDefault === true,
+      )?._id,
+      tax: Number(tax),
+      shippingCost: Number(shipping),
+    });
+    // await new Promise((r) => setTimeout(r, 2000));
     setOrderId(generateOrderId());
     setModalState("success");
-  };
-
-  const handleCancel = () => {
-    setIsVisible(false);
   };
 
   return (
     <div className=" w-screen h-screen flex items-center justify-center p-4 font-sans">
       {/* Backdrop */}
-      {isVisible && <div className=" fixed inset-0 bg-black/60 backdrop-blur-sm w-screen h-screen left-0 top-0" />}
+      {isVisible && (
+        <div className=" fixed inset-0 bg-black/60 backdrop-blur-sm w-screen h-screen left-0 top-0" />
+      )}
 
       {/* Modal */}
       <div
@@ -100,7 +103,7 @@ export default function CheckoutConfirmation({isVisible, setIsVisible}: {isVisib
           ${isVisible ? "opacity-100 scale-100 translate-y-0" : "opacity-0 scale-95 translate-y-2"}`}
       >
         {modalState === "success" ? (
-          <SuccessState orderId={orderId} />
+          <SuccessState orderId={orderId} handleCancel={handleCancel} />
         ) : (
           <>
             {/* Header */}
@@ -137,39 +140,67 @@ export default function CheckoutConfirmation({isVisible, setIsVisible}: {isVisib
                 {/* Delivery Address */}
                 <section>
                   <SectionLabel>Delivery address</SectionLabel>
-                  <div className="flex items-start gap-3 bg-zinc-50 dark:bg-zinc-800/60 rounded-xl px-4 py-3 mt-2">
-                    <span className="text-zinc-400 mt-0.5 shrink-0">
-                      <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 16 16"
-                        fill="none"
-                      >
-                        <path
-                          d="M8 1a5 5 0 015 5c0 3.5-5 9-5 9S3 9.5 3 6a5 5 0 015-5z"
-                          stroke="currentColor"
-                          strokeWidth="1.25"
-                          strokeLinejoin="round"
-                        />
-                        <circle cx="8" cy="6" r="1.5" fill="currentColor" />
-                      </svg>
-                    </span>
-                    <div>
-                      <p className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
-                        {SHIPPING_ADDRESS.name}
-                      </p>
-                      <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed mt-0.5">
-                        {SHIPPING_ADDRESS.street}
-                        <br />
-                        {SHIPPING_ADDRESS.city}, {SHIPPING_ADDRESS.state}{" "}
-                        {SHIPPING_ADDRESS.zip}
-                        <br />
-                        {SHIPPING_ADDRESS.country}
-                      </p>
-                    </div>
-                    <button className="ml-auto text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 underline underline-offset-2 transition-colors shrink-0">
-                      Edit
-                    </button>
+                  <div className="flex items-center overflow-x-hidden gap-3 bg-zinc-50 dark:bg-zinc-800/60 rounded-xl  py-3 mt-2">
+                    {SHIPPING_ADDRESSES.data?.length > 0 ? (
+                      SHIPPING_ADDRESSES?.data.map(
+                        (address, idx) =>
+                          address.isDefault === true && (
+                            <div
+                              key={idx}
+                              className=" shrink-0 w-full px-4 relative"
+                            >
+                              {address.isDefault && (
+                                <div className=" absolute -top-2 right-3 bg-emerald-900 px-3 py-0.5 rounded-full">
+                                  <p className=" text-[11px] font-medium text-white">
+                                    Default
+                                  </p>
+                                </div>
+                              )}
+                              <span className="text-zinc-400 mt-0.5 shrink-0">
+                                <svg
+                                  width="16"
+                                  height="16"
+                                  viewBox="0 0 16 16"
+                                  fill="none"
+                                >
+                                  <path
+                                    d="M8 1a5 5 0 015 5c0 3.5-5 9-5 9S3 9.5 3 6a5 5 0 015-5z"
+                                    stroke="currentColor"
+                                    strokeWidth="1.25"
+                                    strokeLinejoin="round"
+                                  />
+                                  <circle
+                                    cx="8"
+                                    cy="6"
+                                    r="1.5"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </span>
+                              <div>
+                                <p className="text-sm font-medium text-zinc-900 dark:text-zinc-50">
+                                  {address.fullName}
+                                </p>
+                                <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed mt-0.5">
+                                  {address.streetAddress}
+                                  <br />
+                                  {address.city}, {address.state}{" "}
+                                  {address.postalCode}
+                                  <br />
+                                  {address.country}
+                                </p>
+                              </div>
+                              {/* <button className="ml-auto text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 underline underline-offset-2 transition-colors shrink-0">
+                                Edit
+                              </button> */}
+                            </div>
+                          ),
+                      )
+                    ) : (
+                      <Link href={"/profile"}>
+                        <p className="">Add New Address</p>
+                      </Link>
+                    )}
                   </div>
                 </section>
 
@@ -183,18 +214,16 @@ export default function CheckoutConfirmation({isVisible, setIsVisible}: {isVisib
                     />
                     <SummaryRow
                       label="Shipping"
-                      value={
-                        shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`
-                      }
+                      value={Number(shipping) === 0 ? "Free" : `$${shipping}`}
                       valueClass={
-                        shipping === 0
+                        Number(shipping) === 0
                           ? "text-emerald-600 dark:text-emerald-400 font-medium"
                           : ""
                       }
                     />
                     <SummaryRow
                       label={`Tax (${(TAX_RATE * 100).toFixed(3)}%)`}
-                      value={`$${tax.toFixed(2)}`}
+                      value={`$${tax}`}
                     />
                     <div className="border-t border-zinc-200 dark:border-zinc-700 pt-2 mt-1 flex justify-between items-center">
                       <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
@@ -265,30 +294,39 @@ export default function CheckoutConfirmation({isVisible, setIsVisible}: {isVisib
                 {/* Order Items */}
                 <section>
                   <SectionLabel>
-                    Items ({ORDER_ITEMS.reduce((s, i) => s + i.quantity, 0)})
+                    Items (
+                    {ORDER_ITEMS.products.reduce((s, i) => s + i.quantity, 0)})
                   </SectionLabel>
                   <div className="mt-2 divide-y divide-zinc-100 dark:divide-zinc-800">
-                    {ORDER_ITEMS.map((item) => (
+                    {ORDER_ITEMS.products.map((item) => (
                       <div
-                        key={item.id}
+                        key={item._id}
                         className="flex items-center gap-3 py-3"
                       >
-                        <div className="w-10 h-10 rounded-lg bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-lg shrink-0">
-                          {item.image}
+                        <div className="h-10 w-14 rounded-lg bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-lg shrink-0">
+                          <img
+                            src={item.poster}
+                            alt="item"
+                            className="w-full h-full object-cover"
+                          />
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-medium text-zinc-900 dark:text-zinc-50 truncate">
                             {item.name}
                           </p>
-                          {item.variant && (
+                          {/* {item.variant && (
                             <p className="text-xs text-zinc-400 mt-0.5">
                               {item.variant}
                             </p>
-                          )}
+                          )} */}
                         </div>
                         <div className="text-right shrink-0">
                           <p className="text-sm text-zinc-700 dark:text-zinc-300">
-                            ${(item.price * item.quantity).toFixed(2)}
+                            $
+                            {(
+                              (item.price - item.discountPrice) *
+                              item.quantity
+                            ).toFixed(2)}
                           </p>
                           <p className="text-xs text-zinc-400 mt-0.5">
                             qty {item.quantity}
@@ -296,6 +334,52 @@ export default function CheckoutConfirmation({isVisible, setIsVisible}: {isVisib
                         </div>
                       </div>
                     ))}
+                  </div>
+                </section>
+
+                {/* payment type selection section */}
+                <section className=" mt-5">
+                  <SectionLabel>Payment Type</SectionLabel>
+                  <div className="mt-4 text-white flex items-center justify-around gap-4">
+                    {/* 
+                      cash on delivery
+                      Bkash
+                     */}
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="paymentType"
+                        id="cashOnDelivery"
+                        value="cashOnDelivery"
+                        checked={paymentType === "cashOnDelivery"}
+                        onChange={(e) => setPaymentType(e.target.value)}
+                        className="w-4 h-4 accent-red-500 cursor-pointer"
+                      />
+                      <label
+                        htmlFor="cashOnDelivery"
+                        className="text-sm text-white cursor-pointer"
+                      >
+                        Cash on Delivery
+                      </label>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="paymentType"
+                        id="bkash"
+                        value="bkash"
+                        checked={paymentType === "bkash"}
+                        onChange={(e) => setPaymentType(e.target.value)}
+                        className="w-4 h-4 accent-red-500 cursor-pointer"
+                      />
+                      <label
+                        htmlFor="bKash"
+                        className="text-sm text-white cursor-pointer"
+                      >
+                        bKash
+                      </label>
+                    </div>
                   </div>
                 </section>
               </div>
@@ -308,10 +392,9 @@ export default function CheckoutConfirmation({isVisible, setIsVisible}: {isVisib
                 disabled={modalState === "processing"}
                 className={`w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl text-sm font-semibold
                   transition-all duration-200 active:scale-[0.98]
-                  ${
-                    modalState === "processing"
-                      ? "bg-zinc-300 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-400 cursor-not-allowed"
-                      : "bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:bg-zinc-700 dark:hover:bg-zinc-100"
+                  ${modalState === "processing"
+                    ? "bg-zinc-300 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-400 cursor-not-allowed"
+                    : "bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:bg-zinc-700 dark:hover:bg-zinc-100"
                   }`}
               >
                 {modalState === "processing" ? (
@@ -378,9 +461,23 @@ export default function CheckoutConfirmation({isVisible, setIsVisible}: {isVisib
   );
 }
 
-function SuccessState({ orderId }: { orderId: string }) {
+function SuccessState({ orderId, handleCancel }: { orderId: string, handleCancel: () => void }) {
   return (
-    <div className="flex flex-col items-center text-center px-8 py-12 gap-4 w-2xl">
+    <div className="flex flex-col items-center text-center px-8 py-12 gap-4 w-2xl relative">
+      <button
+        onClick={handleCancel}
+        className="ml-auto w-8 h-8 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center justify-center text-zinc-400 hover:text-zinc-600 transition-colors"
+        aria-label="Close"
+      >
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path
+            d="M1 1l12 12M13 1L1 13"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
+        </svg>
+      </button>
       <div className="w-16 h-16 rounded-full bg-emerald-50 dark:bg-emerald-950 flex items-center justify-center">
         <svg
           width="28"

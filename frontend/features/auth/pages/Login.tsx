@@ -10,11 +10,16 @@ import { useRouter } from "next/navigation";
 
 function Login() {
   const router = useRouter();
-  // geeting current user 
+  // geeting current user
   const user = useSelector((state: { auth: initialInterface }) => state.auth);
   useEffect(() => {
     if (user.success === true) {
-      router.push("/");
+      if (user.data?.role === "user") {
+        router.push("/");
+      }
+      if (user.data?.role === "admin") {
+        router.push("/admin");
+      }
     }
   }, [user.success, router]);
 

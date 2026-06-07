@@ -8,6 +8,8 @@ import {
 import toast from "react-hot-toast";
 import { getAddressesApi } from "@/apis/addresses/getAddresses.api";
 import { deleteAddressApi } from "@/apis/addresses/deleteAddress.api";
+import { editAddressApi } from "@/apis/addresses/editAddress.api";
+import { setDefaultAddressApi } from "@/apis/addresses/setDefaultAddress.api";
 
 export function useAddress() {
   const dispatch = useDispatch();
@@ -99,9 +101,78 @@ export function useAddress() {
     }
   }
 
+  // edit address hook
+  async function editAddress(addressId: string, {
+    name,
+    phone,
+    addressLine1,
+    city,
+    state,
+    zipCode,
+    country,
+  }: {
+    name: string;
+    phone: string;
+    addressLine1: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    country: string;
+  }) {
+    try {
+      const response = await editAddressApi(addressId, {
+        name,
+        phone,
+        addressLine1,
+        city,
+        state,
+        zipCode,
+        country,
+      });
+      if (response.success) {
+        dispatch(setAddressMessage(response.message));
+        await getUserAddresses();
+        await getUserAddresses();
+        toast.success(response.message);
+        return true;
+      } else {
+        dispatch(setAddressMessage(response.message));
+        toast.error(response.message);
+        return false;
+      }
+    } catch (error: any) {
+      dispatch(setAddressError(error.message));
+      toast.error(error.message);
+      return false;
+    }
+  }
+
+  // set default address hook
+  async function setDefaultAddressHook(addressId: string) {
+    try {
+      const response = await setDefaultAddressApi(addressId);
+      if (response.success) {
+        dispatch(setAddressMessage(response.message));
+        await getUserAddresses();
+        toast.success(response.message);
+        return true;
+      } else {
+        dispatch(setAddressMessage(response.message));
+        toast.error(response.message);
+        return false;
+      }
+    } catch (error: any) {
+      dispatch(setAddressError(error.message));
+      toast.error(error.message);
+      return false;
+    }
+  }
+
   return {
     createAddress,
     getUserAddresses,
-    deleteAddress
+    deleteAddress,
+    editAddress, 
+    setDefaultAddressHook
   };
 }

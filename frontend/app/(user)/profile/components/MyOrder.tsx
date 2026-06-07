@@ -39,7 +39,6 @@ function MyOrder() {
     "November",
     "December",
   ];
-
   // const month = Number(products?.[0]?.createdAt?.split("-")[1]);
   // const year = products?.createdAt?.split("-")[0]?.padStart(4, "0");
   return (
@@ -77,7 +76,7 @@ function MyOrder() {
                       Items
                     </p>
                     <p className="font-semibold text-gray-900">
-                      {products.length} items
+                      {order?.products.length} items
                     </p>
                   </div>
                   <div>

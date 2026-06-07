@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import ReduxProvider from "@/toolkit/ReduxProvider";
 import Protected from "@/features/protectedRoute/Protected";
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: "Dealpart",
@@ -17,7 +18,11 @@ export default function RootLayout({
     <html lang="en" className={` h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         <ReduxProvider>
-          <Protected><div className="">{children}</div></Protected>
+          <Protected>
+            {" "}
+            <Toaster position="top-center" reverseOrder={false} />
+            <div className="">{children}</div>
+          </Protected>
         </ReduxProvider>
       </body>
     </html>

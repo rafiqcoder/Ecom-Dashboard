@@ -6,30 +6,6 @@ import { useSelector } from "react-redux";
 import { AddressInterface } from "@/global/types/type";
 import { useAddress } from "../hook/useAddress";
 function MyAddress() {
-  const [addresses, setAddresses] = useState([
-    {
-      id: 1,
-      type: "Billing",
-      fullName: "John Doe",
-      street: "123 Main Street",
-      city: "New York",
-      state: "NY",
-      zipCode: "10001",
-      country: "United States",
-      isDefault: true,
-    },
-    {
-      id: 2,
-      type: "Shipping",
-      fullName: "John Doe",
-      street: "456 Oak Avenue",
-      city: "Los Angeles",
-      state: "CA",
-      zipCode: "90001",
-      country: "United States",
-      isDefault: false,
-    },
-  ]);
   const [isAddress, setIsAddress] = useState(false);
 
   // addresses from redux store
@@ -37,8 +13,11 @@ function MyAddress() {
     (state: { address: AddressInterface }) => state.address,
   );
 
+  console.log(addressesData);
+
   // use address hook
-  const { getUserAddresses, deleteAddress } = useAddress();
+  const { getUserAddresses, deleteAddress, setDefaultAddressHook } =
+    useAddress();
 
   // save address data to redux store
   useEffect(() => {
@@ -57,6 +36,11 @@ function MyAddress() {
 
   // edit address
   const [addressId, setAddressId] = useState<string | null>(null);
+
+  // set default address function
+  const handleSetDefault = async (addressId: string) => {
+    await setDefaultAddressHook(addressId);
+  };
 
   return (
     <div>
@@ -78,14 +62,14 @@ function MyAddress() {
               key={address._id}
               className="border border-gray-200 rounded-lg p-6 relative"
             >
-              {/* {address.isDefault && (
+              {address.isDefault && (
                 <div
                   className="absolute top-4 right-4 px-3 py-1 rounded-full text-white text-xs font-semibold"
                   style={{ backgroundColor: "#4ea674" }}
                 >
                   Default
                 </div>
-              )} */}
+              )}
               {/* <h3 className="text-lg font-bold text-gray-900 mb-4">
                 {address.type}
               </h3> */}
@@ -107,26 +91,27 @@ function MyAddress() {
                     setAddressId(address._id);
                     setIsAddress(true);
                   }}
-                  className="text-sm font-semibold transition"
+                  className="text-sm cursor-pointer font-semibold transition"
                   style={{ color: "#4ea674" }}
                 >
                   Edit
                 </button>
                 <button
                   onClick={() => handleDelete(address._id)}
-                  className="text-sm font-semibold transition"
+                  className="text-sm cursor-pointer font-semibold transition"
                   style={{ color: "#4ea674" }}
                 >
                   Delete
                 </button>
-                {/* {!address.isDefault && (
+                {!address.isDefault && (
                   <button
-                    className="text-sm font-semibold transition"
+                    onClick={() => handleSetDefault(address._id)}
+                    className="text-sm cursor-pointer font-semibold transition"
                     style={{ color: "#4ea674" }}
                   >
                     Set as Default
                   </button>
-                )} */}
+                )}
               </div>
             </div>
           ))}

@@ -8,7 +8,7 @@ const orderSchema = new mongoose.Schema(
     paymentType: {
       type: String,
       required: [true, "payment type is required"],
-      enum: ["Cash on delivery", "Bkash"],
+      enum: ["cashOnDelivery", "bkash"],
     },
     orderStatus: {
       type: String,
@@ -55,14 +55,20 @@ const orderSchema = new mongoose.Schema(
         },
       },
     ],
-    shippingAddress: {
-      type: String,
-      default: "",
-      required: [true, "Shipping address is required"],
+    // shippingAddress: {
+    //   type: String,
+    //   default: "",
+    //   required: [true, "Shipping address is required"],
+    // },
+    // mobile: {
+    //   type: String,
+    //   required: [true, "Mobile number is required"],
+    // },
+    tax: {
+      type: Number,
     },
-    mobile: {
-      type: String,
-      required: [true, "Mobile number is required"],
+    shippingCost: {
+      type: Number,
     },
     totalPrice: {
       type: Number,
@@ -73,7 +79,11 @@ const orderSchema = new mongoose.Schema(
       required: [true, "Payment status is requried"],
       enum: ["pending", "paid", "failed", "refunded"],
     },
-    
+    addressId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: [true, "Address id is required"],
+      ref: "addresses",
+    },
   },
   { timestamps: true },
 );
