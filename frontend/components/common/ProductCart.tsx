@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import { initialInterface } from "@/features/auth/authSlice/types/type";
 import { useRouter } from "next/navigation";
 import { CartSliceInterface } from "@/features/cart/toolkit/types/type";
+import Image from "next/image";
 
 const ProductCard: React.FC<ProductCardProps> = ({
   image = "/api/placeholder/400/350",
@@ -44,10 +45,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
       <div className="bg-white h-full rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
         {/* Image Container */}
         <div className="relative bg-gradient-to-br from-gray-50 to-gray-100 h-72 flex items-center justify-center overflow-hidden">
-          <img
+          <Image
             src={image}
             alt={title}
-            className="w-full h-full object-contain hover:scale-105 transition-transform duration-500"
+            fill
+            className="object-contain hover:scale-105 transition-transform duration-500"
           />
 
           {/* Discount Badge */}

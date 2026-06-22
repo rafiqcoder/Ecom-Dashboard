@@ -1,9 +1,10 @@
+import Link from 'next/link';
 import React from 'react'
 
 function Home() {
   return (
-    <div>Hello admin</div>
+    <div></div>
   )
 }
 
-export default Home;
+export default Home; 

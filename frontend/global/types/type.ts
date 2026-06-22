@@ -1,4 +1,3 @@
-
 interface Rating {
   _id: string;
   userId: string;
@@ -26,8 +25,6 @@ export interface Product {
   productCategory: string[];
   productTag: string[];
 
-
-
   stockQuantity: number;
   stockStatus: boolean;
 
@@ -37,7 +34,6 @@ export interface Product {
   __v: number;
 }
 
-
 // category slice interface
 export interface ProductsFetchingInterface {
   products: Product[];
@@ -46,7 +42,6 @@ export interface ProductsFetchingInterface {
   message: string;
   success: boolean;
 }
-
 
 // user data interface
 export interface data {
@@ -68,7 +63,7 @@ export interface data {
 export interface initialInterface {
   err: string;
   data: data;
-  loading: boolean,
+  loading: boolean;
   success: boolean;
   message: string;
 }
@@ -95,4 +90,20 @@ export interface AddressInterface {
   message: string;
   data: AddressData[];
   success: boolean;
+}
+
+// dashboard data interface
+
+interface Data {
+  totalOrder: number;
+  totalSales: number;
+  pendingOrder: number;
+  cancelledOrder: number;
+}
+export interface DashboardDataInterface {
+  message: string;
+  loading: boolean;
+  data: Data;
+  success: boolean;
+  error: string | null;
 }

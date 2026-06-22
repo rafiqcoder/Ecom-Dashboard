@@ -18,7 +18,7 @@ function Login() {
         router.push("/");
       }
       if (user.data?.role === "admin") {
-        router.push("/admin");
+        router.push("/admin/dashboard");
       }
     }
   }, [user.success, router]);

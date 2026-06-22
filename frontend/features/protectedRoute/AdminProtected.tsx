@@ -11,6 +11,8 @@ function AdminProtected({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
+    // this line prevent error "The operation was aborted due to timeout" in nextjs because 
+    if(!user) return;
     if(!user.success){
         router.push("/login")
     }
@@ -18,8 +20,11 @@ function AdminProtected({ children }: { children: React.ReactNode }) {
       if (user.data?.role !== "admin") {
         router.push("/");
       }
+      else{
+        router.push("/admin/dashboard")
+      }
     }
-  }, [user.success, router]);
+  }, []);
   return <div id="protection-div">{children}</div>;
 }
 

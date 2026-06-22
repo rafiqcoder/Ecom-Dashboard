@@ -66,13 +66,13 @@ export const useAuth = () => {
         return;
       } else {
         dispatch(setErrorState(data.message));
-        toast.success(data.message);
+        toast.error(data.message);
       }
     } catch (error: unknown) {
       dispatch(
         setErrorState(error.response?.data?.message || "Someting went wrong"),
       );
-      toast.error(error.response.data.error[0].msg || "Someting went wrong");
+      toast.error(error.response?.data?.error?.map((err: any) => err.msg).join(", ") || "Someting went wrong");
     } finally {
       dispatch(setLoading(false));
     }

@@ -18,7 +18,6 @@ function Products() {
     }
     if (!success) getProducts();
   }, []);
-  console.log(products)
   return (
     <div>
       {loading ? (
