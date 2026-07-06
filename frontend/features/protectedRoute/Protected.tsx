@@ -28,12 +28,12 @@ function Protected({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     // if (!user.success) return;
-    if (!user.success) {
-      router.push("/login");
-    } else if (user.data.role === "admin") {
-      router.push("/admin/dashboard");
-    } else {
-      router.push("/");
+    if (user.success) {
+      if (user.data.role === "admin") {
+        router.push("/admin/dashboard");
+      } else {
+        router.push("/");
+      }
     }
   }, [user]);
 

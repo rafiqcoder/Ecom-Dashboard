@@ -15,7 +15,13 @@ export const updateQuantityController = async (req, res) => {
   }
   // check product is exist or not exist
   const productStock = await productModel.findById(productId);
-
+  // check if product out of stock
+  if (productStock?.stockQuantity === 0) {
+    return res.status(400).json({
+      message: "This product is out of stock",
+      success: false,
+    });
+  }
   // find product and update
   const product = await cartModel.findOneAndUpdate({
     productId,

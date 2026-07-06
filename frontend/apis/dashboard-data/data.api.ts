@@ -14,3 +14,13 @@ export const getDashboardData = async () => {
     console.log(error);
   }
 };
+
+// get weekly data
+export const getWeeklyData = async () => {
+  try {
+    const res = await api.get(`/admin/dashboard/weeklyData`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};

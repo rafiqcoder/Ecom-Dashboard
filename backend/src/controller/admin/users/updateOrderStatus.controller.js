@@ -34,6 +34,7 @@ export const updateOrderStatusController = async (req, res) => {
         $inc: {
           stockQuantity: -item.quantity,
         },
+        stockStatus: false,
       });
     });
   }

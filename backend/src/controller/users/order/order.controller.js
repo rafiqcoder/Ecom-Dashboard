@@ -37,7 +37,7 @@ export const orderController = async (req, res) => {
   );
   let totalPrice = 0;
   products.map((item) => {
-    totalPrice += item.subTotal;
+    totalPrice += Number(item.subTotal);
   });
   //create new order
   const orders = await orderModel.create({

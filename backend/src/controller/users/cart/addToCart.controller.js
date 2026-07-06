@@ -21,9 +21,15 @@ export const addToCartController = async (req, res, next) => {
         success: false,
       });
     }
+    // check if product out of stock
+    if(isProductExist.stockQuantity === 0){
+      return res.status(400).json({
+        message: "This product is out of stock",
+        success: false,
+      });
+    }
     // check if product already exist
     const isProductAlreadyExist = await cartModel.findOne({ productId, userId: user._id });
-    console.log(isProductAlreadyExist);
     if (isProductAlreadyExist) {
       isProductAlreadyExist.quantity = isProductAlreadyExist.quantity + 1;
       await isProductAlreadyExist.save();

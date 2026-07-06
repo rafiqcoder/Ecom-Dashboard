@@ -17,6 +17,7 @@ import getAllOrderRouter from "./routes/admin/users/order/getAllOrder.route.js";
 import getRatingProductRouter from "./routes/admin/users/ratingProduct/getTopRatedProduct.route.js";
 import getOrderByIdRouter from "./routes/user/orders/getOrderById.route.js";
 import addressRouter from "./routes/user/address/address.route.js";
+import weeklyData from "./routes/admin/dashboard/weeklyData.route.js";
 const app = express();
 
 app.use(express.json());
@@ -58,4 +59,6 @@ app.use("/", getRatingProductRouter);
 app.use("/", getOrderByIdRouter);
 // address router
 app.use("/", addressRouter);
+// weekly data 
+app.use("/", weeklyData);
 export default app;

@@ -21,7 +21,7 @@ export const updateProductController = async (req, res) => {
     });
   }
   // updated data
-  const {
+  let {
     name,
     description,
     price,
@@ -35,6 +35,10 @@ export const updateProductController = async (req, res) => {
     productCategory,
     productTag,
   } = req.body;
+  // if update product stock quantity then automatically update stockStatus
+  if (stockQuantity > 0) {
+    stockStatus = true;
+  }
   // checking is product exist
   const isProduct = await productModel.findById(productId);
   if (!isProduct) {
