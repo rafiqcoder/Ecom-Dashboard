@@ -110,7 +110,7 @@ const Toast = ({ toast, onClose }: { toast: ToastState; onClose: () => void }) =
   );
 };
 
-// ─── Status Dropdown ─────────────────────────────────────────────────────────
+// ─── Status Dropdown ──────────────────────── ─────────────────────────────────
 
 interface StatusDropdownProps {
   orderId: string;

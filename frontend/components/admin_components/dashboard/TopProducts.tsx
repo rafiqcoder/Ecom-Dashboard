@@ -1,12 +1,10 @@
+import { Product } from "@/global/types/type";
 import ProductThumb from "../ui/ProductThumb";
 import { Search } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
-function TopProducts({
-  topProducts,
-}: {
-  topProducts?: { name: string; sku: string; price: string; color: string }[];
-}) {
+function TopProducts({ topProducts }: { topProducts?: Product[] }) {
   const topProduct = [
     {
       name: "Apple iPhone 13",
@@ -62,25 +60,36 @@ function TopProducts({
 
         <ul>
           {topProducts
-            ? topProducts?.map((p, i) => (
-                <li
-                  key={p.name}
-                  className={`flex items-center gap-3 py-3 ${
-                    i !== 0 ? "border-t border-[#F0F0F2]" : ""
-                  }`}
-                >
-                  <ProductThumb colorClass={p.color} />
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-semibold text-[#23272E]">
-                      {p.name}
-                    </p>
-                    <p className="text-xs text-[#8B909A]">{p.sku}</p>
-                  </div>
-                  <p className="text-sm font-semibold text-[#23272E]">
-                    {p.price}
-                  </p>
-                </li>
-              ))
+            ? topProducts?.map(
+                (p, i) =>
+                  i < 5 && (
+                    <li
+                      key={p.name}
+                      className={`flex items-center gap-5 max-md:gap-3 py-3 ${
+                        i !== 0 ? "border-t border-[#F0F0F2]" : ""
+                      }`}
+                    >
+                      <Image
+                        className=" rounded-md"
+                        src={p.poster}
+                        alt="Product Image"
+                        width={50}
+                        height={50}
+                      />
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-semibold text-[#23272E]">
+                          {p.name}
+                        </p>
+                        <p className="text-xs text-[#8B909A]">
+                          #{p.productCategory[0]}
+                        </p>
+                      </div>
+                      <p className="text-sm font-semibold text-[#23272E]">
+                        ${p.price}
+                      </p>
+                    </li>
+                  ),
+              )
             : topProduct.map((p, i) => (
                 <li
                   key={p.name}

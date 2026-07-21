@@ -64,7 +64,7 @@ export default function StatsCards() {
       {/* Total Sales */}
       <StatCard title="Total Sales" period="Last 7 days">
         <div className="flex items-end gap-2">
-          <span className="text-3xl font-bold text-gray-900">${data.data?.totalSales}</span>
+          <span className="text-3xl font-bold text-gray-900">${data.data?.totalSales.toFixed(2)}</span>
           <span className="flex items-center gap-0.5 text-xs font-semibold text-emerald-500 mb-1">
             <TrendingUp className="w-3 h-3" /> 10.4%
           </span>

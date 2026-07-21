@@ -12,11 +12,11 @@ import {
 
 const data = [
   { day: "Sun", value: 1 },
-  { day: "Mon", value: 2 },
-  { day: "Tue", value: 3 },
-  { day: "Wed", value: 4 },
-  { day: "Thu", value: 5 },
-  { day: "Fri", value: 6 },
+  { day: "Mon", value: 22},
+  { day: "Tue", value: 33 },
+  { day: "Wed", value: 64 },
+  { day: "Thu", value: 20 },
+  { day: "Fri", value: 30 },
   { day: "Sat", value: 7 },
 ];
 
@@ -29,7 +29,7 @@ const CustomTooltip = ({ active, payload, label }: {active?: boolean, payload?: 
         </p>
 
         <p className="text-center text-xl font-bold text-gray-900">
-          {(payload[0].value / 1000).toFixed(0)}k
+          {payload?.[0]?.value ? (payload[0]?.value / 1000).toFixed(0) + "k" : 0}
         </p>
       </div>
     );

@@ -43,7 +43,7 @@ function Category() {
         {category.map((cate, idx) => {
           return (
             idx <= showingCate && (
-              <Link key={idx} href={"/products" + cate.path}>
+              <Link key={idx} href={"/products/category" + cate.path}>
                 <div
                   className={`text-[14px] cursor-pointer transition duration-300 md:text-[15px] relative  hover:text-[#4EA674] ${"/products" + cate.path === path ? "border-b border-[#4EA674] text-[#4EA674]" : "borderAnimate text-[#023337] "}`}
                 >

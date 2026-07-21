@@ -11,6 +11,7 @@ import { initialInterface } from "@/features/auth/authSlice/types/type";
 import { useRouter } from "next/navigation";
 import { CartSliceInterface } from "@/features/cart/toolkit/types/type";
 import Image from "next/image";
+import Link from "next/link";
 
 const ProductCard: React.FC<ProductCardProps> = ({
   image = "/api/placeholder/400/350",
@@ -140,7 +141,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           {/* Action Buttons */}
           <div className="flex gap-3 pt-4 text-[14px]">
             <button className="flex-1 transition duration-300 hover:border-b border-[#6467F2] cursor-pointer text-[#6467F2] text-center rounded-lg font-medium ">
-              View Details
+              <Link href={`/products/${productId}`}> View Details </Link>
             </button>
             <button
               className="flex-1 cursor-pointer px-4 py-2 rounded-lg font-medium text-white transition-all duration-300 shadow-md hover:shadow-lg"
